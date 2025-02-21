@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManageActivity</class>
+ <widget class="QWidget" name="ManageActivity">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>608</width>
+    <height>418</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Manage Activity</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QFrame" name="horizontalFrame">
+       <property name="styleSheet">
+        <string notr="true">QTableView {
+    border: 1px solid #d3d3d3;  /* Border around the entire table */
+    selection-background-color: #a1c4fd;  /* Background color for selected cells */
+    selection-color: white;  /* Text color for selected cells */
+    alternate-background-color: #f2f2f2;  /* Background color for alternate rows */
+    gridline-color: #cccccc;  /* Color of gridlines separating cells */
+    background-color: #ffffff;  /* Background color of the table */
+}
+
+/* Styling for individual cells */
+QTableView::item {
+    padding: 2px;  /* Padding inside each cell */
+	font-size:12px;
+    color: black;  /* Default text color */
+    background-color: white;  /* Default background color of cells */
+}
+
+/* Styling for selected cells */
+QTableView::item:selected {
+    background-color: rgb(255, 85, 88);  /* Background color for selected cells */
+    color: white;  /* Text color for selected cells */
+}
+
+/* Row Styling (for alternate rows) */
+QTableView::item:alternate {
+    background-color: #f9f9f9;  /* Background color for alternate rows */
+}
+
+/* Styling for header cells */
+QHeaderView::section {
+    background-color: rgb(104, 109, 118);  /*#2c3e50 Header background color */
+    color: white;  /* Header text color */
+    padding: 5px;  /* Padding for header cells */
+    font-weight: bold;  /* Bold font for header text */
+    text-align: center;  /* Center-align header text */
+}
+
+/* Header horizontal lines */
+QHeaderView::section:horizontal {
+    border-right: 1px solid #d3d3d3;  /* Border between header cells */
+}
+
+/* For sorting indicators in the header */
+QHeaderView::indicator:checked {
+    background-color: #0078d4;  /* Sorting indicator background color */
+}
+
+
+/* Scrollbar Styling */
+
+QScrollBar:horizontal {
+        min-width: 240px;
+        height: 13px;
+    }
+
+    QScrollBar:vertical {
+        min-height: 240px;
+        width: 13px;
+    }
+
+    QScrollBar::groove {
+        background: gray;
+        border-radius: 2px;
+    }
+
+    QScrollBar::handle {
+        background: rgb(74, 144, 226);
+        border-radius: 2px;
+    }
+
+    QScrollBar::handle:horizontal {
+        width: 25px;
+    }
+
+    QScrollBar::handle:vertical {
+        height: 25px;
+    }</string>
+       </property>
+       <layout class="QHBoxLayout" name="table_horizontalLayout"/>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="horizontalFrame">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>60</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="del_btn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+	color: rgb(255, 255, 255);
+	background-color: rgb(255, 85, 88);
+	border:none;
+	padding:10px;
+}
+QPushButton:hover{
+	background-color: rgb(194, 65, 69);
+}</string>
+          </property>
+          <property name="text">
+           <string>Delete</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normalon>:/resources/icons/delete_selected.svg</normalon>
+           </iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>28</width>
+            <height>28</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="delete_all_btn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+	color: rgb(255, 255, 255);
+	background-color: rgb(255, 85, 88);
+	border:none;
+	padding:10px;
+}
+QPushButton:hover{
+	background-color: rgb(194, 65, 69);
+}</string>
+          </property>
+          <property name="text">
+           <string>Delete All</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normalon>:/resources/dashboard-icons/delete.svg</normalon>
+           </iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>28</width>
+            <height>28</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{
+	color: rgb(255, 255, 255);
+	background-color: rgb(255, 85, 88);
+	border:none;
+	padding:10px;
+}
+QPushButton:hover{
+	background-color: rgb(194, 65, 69);
+}</string>
+          </property>
+          <property name="text">
+           <string>Advance View</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normalon>:/resources/product-icons/advance_view.svg</normalon>
+           </iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>28</width>
+            <height>28</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
