@@ -34,10 +34,8 @@ private:
     // Private constructor for singleton pattern
     DatabaseManager() {
         db = QSqlDatabase::addDatabase("QSQLITE");
-        //For Release
+        
         db.setDatabaseName(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/i_m_s.db");
-        //For Debug
-        //db.setDatabaseName("C:/Users/arshm/OneDrive/Desktop/Git_Projects/IMS/i_m_s.db");
 
         if (!db.open()) {
             qDebug() << "Error opening database: " << db.lastError().text();
