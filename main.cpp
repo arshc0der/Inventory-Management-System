@@ -7,6 +7,10 @@
 #include <QSqlDatabase>
 #include <QDebug>
 
+#include <QStandardPaths>
+#include <QDir>
+#include <QDebug>
+
 #include <QSplashScreen>
 #include <QThread>
 #include <QPixmap>
@@ -24,6 +28,27 @@ int main(int argc, char *argv[])
     QSplashScreen *splash = new QSplashScreen(scaledPixmap);
     splash->setWindowFlags(Qt::SplashScreen | Qt::WindowStaysOnTopHint);
     splash->show();
+
+    splash->showMessage("Preparing System...");
+    //Create a IMS Folder
+    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
+    // Get the parent directory (e.g., AppData/Roaming)
+    QDir dir(appDataPath);
+    dir.cdUp(); // Go up from /Roaming/YourAppName to /Roaming
+
+    QString imsPath = dir.absolutePath() + "/IMS";
+    QDir imsDir(imsPath);
+
+    if (!imsDir.exists()) {
+        if (imsDir.mkpath(".")) {
+            qDebug() << "IMS folder created at:" << imsPath;
+        } else {
+            qDebug() << "Failed to create IMS folder!";
+        }
+    } else {
+        qDebug() << "IMS folder already exists at:" << imsPath;
+    }
 
     splash->showMessage("Preparing Database...");
     // Initialize the database connection
