@@ -1314,7 +1314,7 @@ void DashBoard::on_add_product_btn_clicked()
         // Add the notification to the stacked widget
         ui->scrollArea_notification_store->addWidget(notification);
 
-        add_product = new AddProduct(this);
+        add_product = new AddProduct(nullptr);
         add_product->show();
     } else {
         // Deny access
@@ -1326,7 +1326,7 @@ void DashBoard::on_add_product_btn_clicked()
 void DashBoard::on_Update_product_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("update_products")) {
-        Update_Product = new UpdateProduct(this);
+        Update_Product = new UpdateProduct(nullptr);
         Update_Product->show();
     } else {
         // Deny access
@@ -1338,7 +1338,7 @@ void DashBoard::on_Update_product_btn_clicked()
 void DashBoard::on_Delete_Product_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("delete_products")) {
-        Delete_Product = new DeleteProduct(this);
+        Delete_Product = new DeleteProduct(nullptr);
         Delete_Product->show();
     } else {
         // Deny access
@@ -1349,7 +1349,7 @@ void DashBoard::on_Delete_Product_btn_clicked()
 void DashBoard::on_add_sales_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("add_sales")) {
-        Add_Sales = new AddSales(this);
+        Add_Sales = new AddSales(nullptr);
         Add_Sales->show();
     } else {
         // Deny access
@@ -1361,7 +1361,7 @@ void DashBoard::on_add_sales_btn_clicked()
 void DashBoard::on_update_sales_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("update_sales")) {
-        Update_Sales = new UpdateSales(this);
+        Update_Sales = new UpdateSales(nullptr);
         Update_Sales->show();
     } else {
         // Deny access
@@ -1373,7 +1373,7 @@ void DashBoard::on_update_sales_btn_clicked()
 void DashBoard::on_delete_sales_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("delete_sales")) {
-        Delete_Sales = new DeleteSales(this);
+        Delete_Sales = new DeleteSales(nullptr);
         Delete_Sales->show();
     } else {
         // Deny access
@@ -1385,7 +1385,7 @@ void DashBoard::on_delete_sales_btn_clicked()
 void DashBoard::on_addorders_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("add_orders")) {
-        addorders = new AddOrders(this);
+        addorders = new AddOrders(nullptr);
         addorders->show();
     } else {
         // Deny access
@@ -1402,7 +1402,7 @@ void DashBoard::Load_manage_actvity(){
 void DashBoard::on_update_orders_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("update_orders")) {
-        Update_Orders= new UpdateOrders(this);
+        Update_Orders= new UpdateOrders(nullptr);
         Update_Orders->show();
     } else {
         // Deny access
@@ -1414,7 +1414,7 @@ void DashBoard::on_update_orders_btn_clicked()
 void DashBoard::on_delete_orders_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("delete_orders")) {
-        Delete_Orders = new DeleteOrders(this);
+        Delete_Orders = new DeleteOrders(nullptr);
         Delete_Orders->show();
     } else {
         // Deny access
@@ -1426,7 +1426,7 @@ void DashBoard::on_delete_orders_btn_clicked()
 void DashBoard::on_add_emp_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("add_employees")) {
-        Add_Employee = new AddEmployee(this);
+        Add_Employee = new AddEmployee(nullptr);
         Add_Employee->show();
     } else {
         // Deny access
@@ -1581,7 +1581,7 @@ void DashBoard::Get_Average_salary_employee(){
 void DashBoard::on_add_promotion_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("add_promotion")) {
-        Add_Promotion = new AddPromotion(this);
+        Add_Promotion = new AddPromotion(nullptr);
         Add_Promotion->show();
     } else {
         // Deny access
@@ -1687,7 +1687,7 @@ void DashBoard::Get_Discount_Highlights(){
 void DashBoard::on_update_promotion_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("update_promotion")) {
-        Update_Promotion = new UpdatePromotion(this);
+        Update_Promotion = new UpdatePromotion(nullptr);
         Update_Promotion->show();
     } else {
         // Deny access
@@ -1699,7 +1699,7 @@ void DashBoard::on_update_promotion_btn_clicked()
 void DashBoard::on_delete_promotion_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("delete_promotion")) {
-        Delete_Promotion = new DeletePromotion(this);
+        Delete_Promotion = new DeletePromotion(nullptr);
         Delete_Promotion->show();
     } else {
         // Deny access
@@ -1711,7 +1711,7 @@ void DashBoard::on_delete_promotion_btn_clicked()
 void DashBoard::on_update_employee_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("update_employees")) {
-        Update_Employee = new UpdateEmployee(this);
+        Update_Employee = new UpdateEmployee(nullptr);
         Update_Employee->show();
     } else {
         // Deny access
@@ -1723,7 +1723,7 @@ void DashBoard::on_update_employee_btn_clicked()
 void DashBoard::on_delete_employee_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("delete_employees")) {
-        Delete_Employee = new DeleteEmployee(this);
+        Delete_Employee = new DeleteEmployee(nullptr);
         Delete_Employee->show();
     } else {
         // Deny access
@@ -1735,7 +1735,7 @@ void DashBoard::on_delete_employee_btn_clicked()
 void DashBoard::on_update_permission_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("update_employees")) {
-        Update_Permissions = new UpdatePermissions(this);
+        Update_Permissions = new UpdatePermissions(nullptr);
         Update_Permissions->show();
     } else {
         // Deny access
@@ -1765,7 +1765,7 @@ void DashBoard::Orders_Trends_Loader(){
 void DashBoard::on_add_adjustments_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("adjustment_Stock")) {
-        Add_Adjustment = new AddAdjustment(this);
+        Add_Adjustment = new AddAdjustment(nullptr);
         Add_Adjustment->show();
     } else {
         // Deny access
