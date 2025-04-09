@@ -110,7 +110,7 @@ void MainWindow::on_login_btn_clicked()
 
                     // Proceed to the main application window
                     hide();
-                    DashBoard *dash_board = new DashBoard(this);
+                    DashBoard *dash_board = new DashBoard(nullptr);
                     dash_board->show();
                 } else {
                     // Increment failed login attempts
@@ -208,7 +208,7 @@ void MainWindow::on_login_btn_clicked()
 
                     // Proceed to the main application window
                     hide();
-                    DashBoard *dash_board = new DashBoard(this);
+                    DashBoard *dash_board = new DashBoard(nullptr);
                     dash_board->show();
                 } else {
                     // Increment failed login attempts
