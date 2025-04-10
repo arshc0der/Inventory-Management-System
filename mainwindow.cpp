@@ -47,6 +47,7 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_login_btn_clicked()
 {
     if(admin==true && employee==false){
+
         GlobalFunctions::set_admin();//setting admin
         QString username = ui->username_lineEdit->text();
         QString password = ui->pass_lineEdit->text();
@@ -293,6 +294,8 @@ void MainWindow::on_toggle_button_main_circle_clicked()
     connect(fadeOutMain, &QPropertyAnimation::finished, [=]() {
         ui->toggle_button_main_circle->hide(); // Hide the main button after fade-out
         ui->toggle_button_admin_circle->show(); // Show the admin button
+        ui->label_input_uername_email->setText("Username");
+        ui->username_lineEdit->setPlaceholderText("Enter your username");
         ui->toogle_status_label->setText("Admin");
         ui->title_job_label->setText("Login as Admin");
         admin = true;
@@ -327,6 +330,8 @@ void MainWindow::on_toggle_button_admin_circle_clicked()
     connect(fadeOutAdmin, &QPropertyAnimation::finished, [=]() {
         ui->toggle_button_admin_circle->hide(); // Hide the admin button after fade-out
         ui->toggle_button_main_circle->show();  // Show the main button
+        ui->label_input_uername_email->setText("Email");
+        ui->username_lineEdit->setPlaceholderText("Enter your email");
         ui->toogle_status_label->setText("Employee");
         ui->title_job_label->setText("Login as Employee");
         admin = false;
