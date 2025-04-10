@@ -154,7 +154,7 @@ QTableView::item {
 
 /* Styling for selected cells */
 QTableView::item:selected {
-    background-color: rgb(71, 202, 172);  /* Background color for selected cells */
+    background-color: #F5A623;  /* Background color for selected cells */
     color: white;  /* Text color for selected cells */
 }
 

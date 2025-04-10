@@ -34,7 +34,9 @@
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);</string>
+         <string notr="true">background-color: rgb(255, 208, 209);
+padding:10px;
+border-radius:10px;</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
@@ -44,6 +46,15 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>48</width>
+             <height>48</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 255, 255);</string>
            </property>
            <property name="text">
             <string/>

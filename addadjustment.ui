@@ -439,6 +439,9 @@ color: rgb(14, 28, 44);</string>
                  <pointsize>11</pointsize>
                 </font>
                </property>
+               <property name="calendarPopup">
+                <bool>true</bool>
+               </property>
                <property name="date">
                 <date>
                  <year>2001</year>

@@ -37,7 +37,7 @@
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(215, 255, 246);
+         <string notr="true">background-color: rgb(246, 233, 211);
 padding:10px;
 border-radius:10px;</string>
         </property>
@@ -87,7 +87,7 @@ border-radius:10px;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">color: rgb(80, 227, 194);</string>
+            <string notr="true">color: #F5A623;</string>
            </property>
            <property name="text">
             <string>Update Promotion</string>
@@ -115,13 +115,14 @@ border-radius:10px;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton{
-background-color: #50E3C2;
+background-color: #F5A623;
 color: rgb(255, 255, 255);
 border:none;
 padding: 10px;
+border-radius: 10px;
 }
 QPushButton:hover{
-background-color:rgb(54, 154, 131);
+background-color: rgb(159, 107, 22);
 }</string>
            </property>
            <property name="text">
@@ -154,7 +155,7 @@ QTableView::item {
 
 /* Styling for selected cells */
 QTableView::item:selected {
-    background-color: rgb(71, 202, 172);  /* Background color for selected cells */
+    background-color: #F5A623;  /* Background color for selected cells */
     color: white;  /* Text color for selected cells */
 }
 
