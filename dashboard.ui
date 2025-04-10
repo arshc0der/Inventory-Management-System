@@ -382,7 +382,7 @@ QPushButton:checked{
          <string notr="true">background-color:rgb(245, 248, 255);</string>
         </property>
         <property name="currentIndex">
-         <number>4</number>
+         <number>8</number>
         </property>
         <widget class="QWidget" name="DashBoard_page">
          <layout class="QHBoxLayout" name="horizontalLayout_71">
@@ -6665,7 +6665,52 @@ background-color: rgb(53, 104, 162);
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_76"/>
+             <layout class="QHBoxLayout" name="horizontalLayout_76">
+              <item>
+               <widget class="QLabel" name="label_97">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(74, 144, 226);</string>
+                </property>
+                <property name="text">
+                 <string>Upcoming Features</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_47">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>602</width>
+                  <height>480</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="resources.qrc">:/resources/vectors/revenue.svg</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>

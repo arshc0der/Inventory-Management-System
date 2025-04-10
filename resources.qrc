@@ -122,5 +122,7 @@
         <file>resources/logo/logo.png</file>
         <file>resources/icons/select.svg</file>
         <file>logo.ico</file>
+        <file>resources/vectors/under_development.svg</file>
+        <file>resources/vectors/revenue.svg</file>
     </qresource>
 </RCC>
