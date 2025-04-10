@@ -321,7 +321,14 @@ border-radius:10px;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">color: rgb(14, 28, 44);
-border:none;</string>
+border:none;
+padding:10px;</string>
+              </property>
+              <property name="buttonSymbols">
+               <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
+              </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -509,7 +516,12 @@ border-radius:10px;</string>
             <item>
              <widget class="QDoubleSpinBox" name="discount_doubleSpinBox">
               <property name="styleSheet">
-               <string notr="true">color: rgb(14, 28, 44);</string>
+               <string notr="true">color: rgb(14, 28, 44);
+border:none;
+padding:10px;</string>
+              </property>
+              <property name="buttonSymbols">
+               <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
               </property>
               <property name="decimals">
                <number>1</number>
@@ -598,7 +610,15 @@ border-radius:10px;</string>
             <item>
              <widget class="QDateEdit" name="end_Date_dateEdit">
               <property name="styleSheet">
-               <string notr="true">color: rgb(14, 28, 44);</string>
+               <string notr="true">color: rgb(14, 28, 44);
+border:none;
+padding:10px;</string>
+              </property>
+              <property name="buttonSymbols">
+               <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
+              </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
