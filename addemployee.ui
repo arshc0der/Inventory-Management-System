@@ -286,7 +286,7 @@ background-color: rgb(57, 112, 175);
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>0</y>
+                 <y>-222</y>
                  <width>537</width>
                  <height>1849</height>
                 </rect>
@@ -794,21 +794,72 @@ background-color: rgb(255, 255, 255);
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="type_lineEdit">
-                           <property name="sizePolicy">
-                            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                             <horstretch>0</horstretch>
-                             <verstretch>0</verstretch>
-                            </sizepolicy>
-                           </property>
+                          <widget class="QComboBox" name="type_comboBox">
                            <property name="font">
                             <font>
                              <pointsize>12</pointsize>
                             </font>
                            </property>
-                           <property name="placeholderText">
-                            <string>Full Time</string>
-                           </property>
+                           <item>
+                            <property name="text">
+                             <string>full-time</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>part-time</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>intern</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>contract</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>freelancer</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>consultant</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>temporary</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>remote</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>probation</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>apprentice</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>retired</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>terminated</string>
+                            </property>
+                           </item>
                           </widget>
                          </item>
                         </layout>
@@ -902,21 +953,22 @@ background-color: rgb(255, 255, 255);
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="status_lineEdit">
-                           <property name="sizePolicy">
-                            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                             <horstretch>0</horstretch>
-                             <verstretch>0</verstretch>
-                            </sizepolicy>
-                           </property>
+                          <widget class="QComboBox" name="status_combox">
                            <property name="font">
                             <font>
                              <pointsize>12</pointsize>
                             </font>
                            </property>
-                           <property name="placeholderText">
-                            <string>Leave</string>
-                           </property>
+                           <item>
+                            <property name="text">
+                             <string>active</string>
+                            </property>
+                           </item>
+                           <item>
+                            <property name="text">
+                             <string>inactive</string>
+                            </property>
+                           </item>
                           </widget>
                          </item>
                         </layout>

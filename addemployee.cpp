@@ -111,11 +111,11 @@ void AddEmployee::on_add_employee_btn_clicked()
     QString department = ui->department_lineEdit->text().trimmed();
     QDate hire_date = ui->hireDate_dateEdit->date();
     QDate termination_date = ui->termination_date_dateEdit->date();
-    QString status = ui->status_lineEdit->text().trimmed();
+    QString status = ui->status_combox->currentText().trimmed();
     double salary = ui->salary_doubleSpinBox->value();
     double bonus = ui->bonus_doubleSpinBox->value();
     QString profile_picture_url = ui->profile_picture_url_label->text();
-    QString employee_type = ui->type_lineEdit->text().trimmed();
+    QString employee_type = ui->type_comboBox->currentText().trimmed();
     QString password = ui->password_create_lineEdit->text();
     bool is_active = (ui->is_active_comboBox->currentText() == "Yes");
 
@@ -328,7 +328,6 @@ void AddEmployee::on_add_employee_btn_clicked()
     ui->hireDate_dateEdit->clear();
     ui->salary_doubleSpinBox->setValue(0.0);
     ui->bonus_doubleSpinBox->setValue(0.0);
-    ui->type_lineEdit->clear();
     reset_permission(); // Reset permissions checkboxes
 
 }
