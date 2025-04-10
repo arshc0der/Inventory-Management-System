@@ -305,7 +305,8 @@ public:
                 notification_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 message TEXT NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                is_read INTEGER DEFAULT 0 -- 0: Unread, 1: Read
+                is_read INTEGER DEFAULT 0, -- 0: Unread, 1: Read
+                type TEXT DEFAULT 'info'
             )
         )";
         executeQuery(query, createNotificationsTable, "'notifications' table");
