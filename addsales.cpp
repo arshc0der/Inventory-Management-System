@@ -291,3 +291,26 @@ void AddSales::on_register_customer_btn_clicked()
     Register_Customer->show();
 }
 
+
+void AddSales::on_check_discount_pushButton_clicked()
+{
+    checkdiscount = new CheckDiscount;
+    //checkdiscount->show();
+    checkdiscount->exec();
+    // After the dialog is closed, retrieve the discount value
+    QString discount = checkdiscount->getSelectedDiscount();
+
+    // Handle the discount (e.g., display it or apply it to a price)
+    if (!discount.isEmpty()) {
+        QMessageBox::information(this, "Discount Selected", "You selected a discount of " + discount + "%.");
+    } else {
+        QMessageBox::warning(this, "No Discount", "No discount was selected.");
+    }
+
+    // Clean up the dialog
+    delete checkdiscount;
+
+    //setting discount in ui
+    ui->discount_doubleSpinBox->setValue( discount.toDouble());
+}
+

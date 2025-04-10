@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <registercustomer.h>
+#include <checkdiscount.h>
 
 namespace Ui {
 class AddSales;
@@ -36,11 +37,14 @@ private slots:
 
     void on_register_customer_btn_clicked();
 
+    void on_check_discount_pushButton_clicked();
+
 private:
     Ui::AddSales *ui;
     QTableView *tableView;
     QStandardItemModel *model;
     RegisterCustomer *Register_Customer;
+    CheckDiscount *checkdiscount;
 };
 
 #endif // ADDSALES_H

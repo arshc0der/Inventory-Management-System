@@ -71,6 +71,35 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="check_discount_pushButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton{
+border:none;
+color: rgb(255, 255, 255);
+background-color: #00CA80;
+padding:10px;
+}
+QPushButton:hover{
+background-color: rgb(0, 147, 93);
+}</string>
+           </property>
+           <property name="text">
+            <string>Check Discount</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="Add_sale_btn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
