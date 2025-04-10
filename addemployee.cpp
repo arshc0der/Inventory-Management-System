@@ -481,50 +481,49 @@ void AddEmployee::on_password_view_hide_btn_clicked()
 void AddEmployee::on_select_profile_image_clicked()
 {
     QString filePath = QFileDialog::getOpenFileName(
-        this,                   // Parent widget
-        tr("Select Image"),     // Dialog title
-        "",                     // Default directory (empty for home directory)
-        tr("Image Files (*.png *.jpg *.jpeg *.bmp *.gif);;All Files (*.*)") // Filter for image files
+        this,
+        tr("Select Image"),
+        "",
+        tr("Image Files (*.png *.jpg *.jpeg *.bmp *.gif);;All Files (*.*)")
         );
 
     if (!filePath.isEmpty()) {
-
         QString destinationDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/profile_image/";
 
-        // Create the directory if it doesn't exist
         QDir dir;
         if (!dir.exists(destinationDir)) {
-            bool dirCreated = dir.mkpath(destinationDir);  // Create the directory if it doesn't exist
-            if (dirCreated) {
-                qDebug() << "Directory created:" << destinationDir;
-            } else {
+            if (!dir.mkpath(destinationDir)) {
                 qDebug() << "Failed to create directory:" << destinationDir;
                 return;
             }
         }
 
-        // Get the filename from the selected image path
         QFileInfo fileInfo(filePath);
-        QString fileName = fileInfo.fileName();
+        QString originalName = fileInfo.fileName();
 
-        // Define the destination file path
-        QString destinationPath = destinationDir + fileName;
+        // Generate timestamp string
+        QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm-ss");
 
-        // Copy the file from source to destination
+        // Create new filename with emp_ prefix and timestamp
+        QString newFileName = "emp_" + timestamp + "_" + originalName;
+
+        // Full destination path with renamed file
+        QString destinationPath = destinationDir + newFileName;
+
         if (QFile::copy(filePath, destinationPath)) {
             ui->profile_picture_url_label->setText(destinationPath);
 
-            QPixmap image(filePath);
+            QPixmap image(destinationPath);  // Load the copied (renamed) image
             ui->label_profile_icon->setPixmap(image);
-            ui->label_profile_icon->setScaledContents(true);  // Scale image to fit the label size
+            ui->label_profile_icon->setScaledContents(true);
 
-            qDebug() << "Image copied successfully to" << destinationPath;
+            qDebug() << "Image copied and renamed to" << destinationPath;
         } else {
             qDebug() << "Failed to copy image.";
         }
     } else {
         qDebug() << "No file selected.";
     }
-
 }
+
 

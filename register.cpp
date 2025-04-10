@@ -285,7 +285,7 @@ void Register::on_select_btn_clicked()
     // Check if a file was selected
     if (!filePath.isEmpty()) {
 
-        QString destinationDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/profile_image/";
+        QString destinationDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/company_images/";
 
         // Create the directory if it doesn't exist
         QDir dir;
@@ -301,10 +301,16 @@ void Register::on_select_btn_clicked()
 
         // Get the filename from the selected image path
         QFileInfo fileInfo(filePath);
-        QString fileName = fileInfo.fileName();
+        QString originalName = fileInfo.fileName();
+
+        // Generate timestamp
+        QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm-ss");
+
+        // Create new file name
+        QString newFileName = "cmp_" + timestamp + "_" + originalName;
 
         // Define the destination file path (the new path where the image will be copied)
-        QString destinationPath = destinationDir + fileName;
+        QString destinationPath = destinationDir + newFileName;
 
         // Get the business name from the line edit field
         QString businessName = ui->BusinessName_lineEdit->text();  // The business name
