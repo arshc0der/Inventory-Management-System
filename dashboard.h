@@ -148,6 +148,10 @@ private:
     QList<Notification*> notifications;
     //settings uer profile
     void fetchEmployeeInfo(int employeeId);
+    //insertStartupNotifications
+    void insertStartupNotifications();
+    //loadDefaultNotifications
+    void loadDefaultNotifications();
 };
 
 #endif // DASHBOARD_H

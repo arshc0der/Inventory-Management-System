@@ -23,6 +23,9 @@ DashBoard::DashBoard(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //insert deafult notification
+    insertStartupNotifications();
+
     //charts
     Sales_Trends_loader();
     Products_Hightlights_Min_Level_Chart_Loader();
@@ -2004,5 +2007,164 @@ void DashBoard::fetchEmployeeInfo(int employeeId){
 void DashBoard::on_logout_btn_clicked()
 {
     QCoreApplication::quit();
+}
+
+void DashBoard::insertStartupNotifications()
+{
+    QSqlQuery query, insert;
+
+    auto addNotification = [&](const QString &message, const QString &type = "info") {
+        QSqlQuery check;
+        check.prepare("SELECT COUNT(*) FROM notifications WHERE message = ? AND datetime(created_at) >= datetime('now', '-1 hour')");
+        check.addBindValue(message);
+        if (check.exec() && check.next() && check.value(0).toInt() == 0) {
+            insert.prepare("INSERT INTO notifications (message, type) VALUES (?, ?)");
+            insert.addBindValue(message);
+            insert.addBindValue(type);
+            insert.exec();
+        }
+    };
+
+    // PRODUCTS
+    query.exec("SELECT COUNT(*) FROM products WHERE quantity < minimum_stock_level");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification(QString("%1 products are below minimum stock level.").arg(query.value(0).toInt()), "risk");
+
+    query.exec("SELECT COUNT(*) FROM products WHERE quantity = 0");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification(QString("%1 products are completely out of stock.").arg(query.value(0).toInt()), "risk");
+
+    query.exec("SELECT COUNT(*) FROM products WHERE quantity < 0");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some products have negative stock. Please check inventory!", "risk");
+
+    query.exec("SELECT COUNT(*) FROM products WHERE supplier_id IS NULL OR supplier_id = 0");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some products are not linked to any supplier.", "info");
+
+    query.exec("SELECT COUNT(*) FROM products WHERE julianday('now') - julianday(purchase_date) > 30");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some products haven't been updated in over 30 days.", "info");
+
+    // SALES
+    query.exec("SELECT COUNT(*) FROM sales WHERE sale_date = date('now')");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification(QString("%1 sales recorded today.").arg(query.value(0).toInt()), "info");
+
+    query.exec("SELECT COUNT(*) FROM sales WHERE sale_date >= date('now', '-5 days')");
+    if (query.next() && query.value(0).toInt() == 0)
+        addNotification("No sales activity in the past 5 days.", "info");
+
+    // ORDERS
+    query.exec("SELECT COUNT(*) FROM orders WHERE status = 'Pending'");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification(QString("%1 customer orders are still pending.").arg(query.value(0).toInt()), "info");
+
+    query.exec("SELECT COUNT(*) FROM orders WHERE status = 'Pending' AND total_price > 10000");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("High-value pending orders exceeding ₹10,000 exist.", "info");
+
+    query.exec("SELECT COUNT(*) FROM orders WHERE status = 'Pending' AND julianday('now') - julianday(order_date) > 7");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some orders are pending for more than 7 days!", "risk");
+
+    // CUSTOMERS
+    query.exec("SELECT COUNT(*) FROM customers WHERE contact_info IS NULL OR contact_info = ''");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some customers are missing contact details.", "info");
+
+    query.exec("SELECT COUNT(*) FROM customers WHERE date('now') = (SELECT date('now'))");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification(QString("%1 new customers added today.").arg(query.value(0).toInt()), "info");
+
+    // SUPPLIERS
+    query.exec("SELECT COUNT(*) FROM suppliers WHERE supplier_id NOT IN (SELECT DISTINCT supplier_id FROM products)");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some suppliers are not linked to any products.", "info");
+
+    // EMPLOYEES
+    query.exec("SELECT COUNT(*) FROM employees WHERE status = 'terminated' AND is_active = 1");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some terminated employees are still marked active.", "risk");
+
+    query.exec("SELECT COUNT(*) FROM employees WHERE department IS NULL OR department = ''");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some employees do not have a department assigned.", "info");
+
+    query.exec("SELECT COUNT(*) FROM employees WHERE email IS NULL OR role IS NULL");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some employees have missing essential details.", "risk");
+
+    // USERS
+    query.exec("SELECT COUNT(*) FROM users WHERE failed_login_attempts >= 5");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some user accounts have repeated failed login attempts.", "risk");
+
+    query.exec("SELECT COUNT(*) FROM users WHERE role IS NULL OR role = ''");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some users have no role assigned.", "risk");
+
+    // PERMISSIONS
+    query.exec("SELECT COUNT(*) FROM permissions WHERE product_dashboard = 1 AND delete_products = 1 AND advance_view_products = 0");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Users with delete rights but no view rights detected. Check permissions.", "risk");
+
+    // NOTIFICATIONS
+    query.exec("SELECT COUNT(*) FROM notifications WHERE is_read = 0");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification(QString("You have %1 unread notifications.").arg(query.value(0).toInt()), "info");
+
+    // PROMOTIONS
+    query.exec("SELECT COUNT(*) FROM promotions WHERE start_date = date('now')");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some promotions start today.", "info");
+
+    query.exec("SELECT COUNT(*) FROM promotions WHERE end_date = date('now')");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some promotions are ending today.", "info");
+
+    query.exec("SELECT COUNT(*) FROM promotions");
+    if (query.next() && query.value(0).toInt() == 0)
+        addNotification("No promotions are currently running.", "info");
+
+    // INVENTORY ADJUSTMENTS
+    query.exec("SELECT COUNT(*) FROM inventory_adjustments WHERE adjustment_date = date('now')");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification(QString("Inventory adjusted today: %1 changes").arg(query.value(0).toInt()), "info");
+
+    query.exec("SELECT COUNT(*) FROM inventory_adjustments WHERE quantity > 100");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification("Some inventory adjustments exceed 100 units.", "risk");
+
+    // AUDIT LOGS
+    query.exec("SELECT COUNT(*) FROM audit_logs WHERE timestamp >= datetime('now', '-1 day')");
+    if (query.next() && query.value(0).toInt() > 0)
+        addNotification(QString("%1 user actions logged in last 24 hours.").arg(query.value(0).toInt()), "info");
+
+
+    //loadd all notifiaction
+    loadDefaultNotifications();
+}
+
+
+void DashBoard::loadDefaultNotifications()
+{
+    QSqlQuery query;
+    query.prepare("SELECT message, created_at, type FROM notifications ORDER BY created_at DESC");
+
+    if (query.exec()) {
+        while (query.next()) {
+            QString message = query.value("message").toString();
+            QString createdAt = query.value("created_at").toString();
+            QString type = query.value("type").toString();
+
+            // Create notification UI object
+            Notification *notification = new Notification("Notification", message, type, this);
+            ui->scrollArea_notification_store->addWidget(notification);
+            notifications.append(notification);
+        }
+    } else {
+        qDebug() << "Error loading notifications:" << query.lastError().text();
+    }
 }
 
