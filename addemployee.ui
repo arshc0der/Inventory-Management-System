@@ -155,12 +155,12 @@ background-color: rgb(57, 112, 175);
         margin: 3px 15px 3px 15px;
         border: 1px transparent #2A2929;
         border-radius: 4px;
-        background-color: yellow;    /* #2A2929; */
+        background-color: rgb(255, 255, 255);    /* white scroller bg*/
     }
 
     QScrollBar::handle:horizontal
     {
-        background-color: blue;      /* #605F5F; */
+        background-color: rgb(74, 144, 226);      /* blue scoller */
         min-width: 5px;
         border-radius: 4px;
     }
@@ -286,9 +286,9 @@ background-color: rgb(57, 112, 175);
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-368</y>
+                 <y>0</y>
                  <width>537</width>
-                 <height>1807</height>
+                 <height>1849</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_2">

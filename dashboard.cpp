@@ -990,16 +990,6 @@ void DashBoard::Get_Total_No_Products_OutOfStock(){
     {
         int total = query.value("total_items").toInt(); // Get the sum as an integer
         ui->out_of_stock_label->setText("Total Value : " + QLocale().toString(total));
-
-        //showing notification
-        // Create a new notification widget
-        Notification *notification = new Notification("Out of Stock", QLocale().toString(total)+" Products are Out of stock","risk", this);
-
-        // Add the notification to the stacked widget
-        ui->scrollArea_notification_store->addWidget(notification);
-
-        // Store the notification widget in the notifications list
-        notifications.append(notification);
     }
     else
     {
@@ -1025,17 +1015,6 @@ void DashBoard::Get_Total_No_Products_Low_Stock(){
         ui->low_in_stock_label->setText("Total Value : " + QLocale().toString(total));
         //sales page
         ui->Total_Low_Stock_sales->setText("Total Value : " + QLocale().toString(total));
-
-        //Showing Notification
-
-        // Create a new notification widget
-        Notification *notification = new Notification("Low Stock", QLocale().toString(total)+" Products are Low in Stock","info", this);
-
-        // Add the notification to the stacked widget
-        ui->scrollArea_notification_store->addWidget(notification);
-
-        // Store the notification widget in the notifications list
-        notifications.append(notification);
     }
     else
     {
@@ -1311,12 +1290,6 @@ void DashBoard::Get_Total_Cancelled_Orders_Cost(){
 void DashBoard::on_add_product_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("add_product")) {
-        Notification *notification = new Notification("Product clicked", "Product is successfully added","risk", this);
-        notifications.append(notification);
-
-        // Add the notification to the stacked widget
-        ui->scrollArea_notification_store->addWidget(notification);
-
         add_product = new AddProduct(nullptr);
         add_product->show();
     } else {
