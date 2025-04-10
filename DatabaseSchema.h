@@ -306,7 +306,9 @@ public:
                 message TEXT NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 is_read INTEGER DEFAULT 0, -- 0: Unread, 1: Read
-                type TEXT DEFAULT 'info'
+                type TEXT DEFAULT 'info', -- 'risk', 'info', etc.
+                unique_key TEXT, -- Prevents logic-based duplicates
+                auto_generated INTEGER DEFAULT 1 -- 1: system-generated, 0: user
             )
         )";
         executeQuery(query, createNotificationsTable, "'notifications' table");

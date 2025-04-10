@@ -1986,14 +1986,15 @@ void DashBoard::insertStartupNotifications()
 {
     QSqlQuery query, insert;
 
-    auto addNotification = [&](const QString &message, const QString &type = "info") {
+    auto addNotification = [&](const QString &message, const QString &type, const QString &key) {
         QSqlQuery check;
-        check.prepare("SELECT COUNT(*) FROM notifications WHERE message = ? AND datetime(created_at) >= datetime('now', '-1 hour')");
-        check.addBindValue(message);
+        check.prepare("SELECT COUNT(*) FROM notifications WHERE unique_key = ?");
+        check.addBindValue(key);
         if (check.exec() && check.next() && check.value(0).toInt() == 0) {
-            insert.prepare("INSERT INTO notifications (message, type) VALUES (?, ?)");
+            insert.prepare("INSERT INTO notifications (message, type, unique_key, auto_generated) VALUES (?, ?, ?, 1)");
             insert.addBindValue(message);
             insert.addBindValue(type);
+            insert.addBindValue(key);
             insert.exec();
         }
     };
@@ -2001,124 +2002,122 @@ void DashBoard::insertStartupNotifications()
     // PRODUCTS
     query.exec("SELECT COUNT(*) FROM products WHERE quantity < minimum_stock_level");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification(QString("%1 products are below minimum stock level.").arg(query.value(0).toInt()), "risk");
+        addNotification(QString("%1 products are below minimum stock level.").arg(query.value(0).toInt()), "risk", "low-stock-warning");
 
     query.exec("SELECT COUNT(*) FROM products WHERE quantity = 0");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification(QString("%1 products are completely out of stock.").arg(query.value(0).toInt()), "risk");
+        addNotification(QString("%1 products are completely out of stock.").arg(query.value(0).toInt()), "risk", "stock-zero");
 
     query.exec("SELECT COUNT(*) FROM products WHERE quantity < 0");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some products have negative stock. Please check inventory!", "risk");
+        addNotification("Some products have negative stock. Please check inventory!", "risk", "negative-stock");
 
     query.exec("SELECT COUNT(*) FROM products WHERE supplier_id IS NULL OR supplier_id = 0");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some products are not linked to any supplier.", "info");
+        addNotification("Some products are not linked to any supplier.", "info", "missing-supplier");
 
     query.exec("SELECT COUNT(*) FROM products WHERE julianday('now') - julianday(purchase_date) > 30");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some products haven't been updated in over 30 days.", "info");
+        addNotification("Some products haven't been updated in over 30 days.", "info", "product-stale");
 
     // SALES
     query.exec("SELECT COUNT(*) FROM sales WHERE sale_date = date('now')");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification(QString("%1 sales recorded today.").arg(query.value(0).toInt()), "info");
+        addNotification(QString("%1 sales recorded today.").arg(query.value(0).toInt()), "info", "sales-today");
 
     query.exec("SELECT COUNT(*) FROM sales WHERE sale_date >= date('now', '-5 days')");
     if (query.next() && query.value(0).toInt() == 0)
-        addNotification("No sales activity in the past 5 days.", "info");
+        addNotification("No sales activity in the past 5 days.", "info", "sales-inactive");
 
     // ORDERS
     query.exec("SELECT COUNT(*) FROM orders WHERE status = 'Pending'");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification(QString("%1 customer orders are still pending.").arg(query.value(0).toInt()), "info");
+        addNotification(QString("%1 customer orders are still pending.").arg(query.value(0).toInt()), "info", "orders-pending");
 
     query.exec("SELECT COUNT(*) FROM orders WHERE status = 'Pending' AND total_price > 10000");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("High-value pending orders exceeding ₹10,000 exist.", "info");
+        addNotification("High-value pending orders exceeding ₹10,000 exist.", "info", "high-value-orders");
 
     query.exec("SELECT COUNT(*) FROM orders WHERE status = 'Pending' AND julianday('now') - julianday(order_date) > 7");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some orders are pending for more than 7 days!", "risk");
+        addNotification("Some orders are pending for more than 7 days!", "risk", "orders-delayed");
 
     // CUSTOMERS
     query.exec("SELECT COUNT(*) FROM customers WHERE contact_info IS NULL OR contact_info = ''");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some customers are missing contact details.", "info");
+        addNotification("Some customers are missing contact details.", "info", "missing-customer-contact");
 
     query.exec("SELECT COUNT(*) FROM customers WHERE date('now') = (SELECT date('now'))");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification(QString("%1 new customers added today.").arg(query.value(0).toInt()), "info");
+        addNotification(QString("%1 new customers added today.").arg(query.value(0).toInt()), "info", "new-customers-today");
 
     // SUPPLIERS
     query.exec("SELECT COUNT(*) FROM suppliers WHERE supplier_id NOT IN (SELECT DISTINCT supplier_id FROM products)");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some suppliers are not linked to any products.", "info");
+        addNotification("Some suppliers are not linked to any products.", "info", "suppliers-unused");
 
     // EMPLOYEES
     query.exec("SELECT COUNT(*) FROM employees WHERE status = 'terminated' AND is_active = 1");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some terminated employees are still marked active.", "risk");
+        addNotification("Some terminated employees are still marked active.", "risk", "terminated-active-employees");
 
     query.exec("SELECT COUNT(*) FROM employees WHERE department IS NULL OR department = ''");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some employees do not have a department assigned.", "info");
+        addNotification("Some employees do not have a department assigned.", "info", "missing-department");
 
     query.exec("SELECT COUNT(*) FROM employees WHERE email IS NULL OR role IS NULL");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some employees have missing essential details.", "risk");
+        addNotification("Some employees have missing essential details.", "risk", "employee-missing-fields");
 
     // USERS
     query.exec("SELECT COUNT(*) FROM users WHERE failed_login_attempts >= 5");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some user accounts have repeated failed login attempts.", "risk");
+        addNotification("Some user accounts have repeated failed login attempts.", "risk", "user-lock-warnings");
 
     query.exec("SELECT COUNT(*) FROM users WHERE role IS NULL OR role = ''");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some users have no role assigned.", "risk");
+        addNotification("Some users have no role assigned.", "risk", "user-missing-role");
 
     // PERMISSIONS
     query.exec("SELECT COUNT(*) FROM permissions WHERE product_dashboard = 1 AND delete_products = 1 AND advance_view_products = 0");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Users with delete rights but no view rights detected. Check permissions.", "risk");
+        addNotification("Users with delete rights but no view rights detected. Check permissions.", "risk", "bad-permission-combo");
 
     // NOTIFICATIONS
     query.exec("SELECT COUNT(*) FROM notifications WHERE is_read = 0");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification(QString("You have %1 unread notifications.").arg(query.value(0).toInt()), "info");
+        addNotification(QString("You have %1 unread notifications.").arg(query.value(0).toInt()), "info", "unread-notification-count");
 
     // PROMOTIONS
     query.exec("SELECT COUNT(*) FROM promotions WHERE start_date = date('now')");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some promotions start today.", "info");
+        addNotification("Some promotions start today.", "info", "promotions-starting");
 
     query.exec("SELECT COUNT(*) FROM promotions WHERE end_date = date('now')");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some promotions are ending today.", "info");
+        addNotification("Some promotions are ending today.", "info", "promotions-ending");
 
     query.exec("SELECT COUNT(*) FROM promotions");
     if (query.next() && query.value(0).toInt() == 0)
-        addNotification("No promotions are currently running.", "info");
+        addNotification("No promotions are currently running.", "info", "no-promotions");
 
     // INVENTORY ADJUSTMENTS
     query.exec("SELECT COUNT(*) FROM inventory_adjustments WHERE adjustment_date = date('now')");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification(QString("Inventory adjusted today: %1 changes").arg(query.value(0).toInt()), "info");
+        addNotification(QString("Inventory adjusted today: %1 changes").arg(query.value(0).toInt()), "info", "adjustments-today");
 
     query.exec("SELECT COUNT(*) FROM inventory_adjustments WHERE quantity > 100");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification("Some inventory adjustments exceed 100 units.", "risk");
+        addNotification("Some inventory adjustments exceed 100 units.", "risk", "adjustments-large");
 
     // AUDIT LOGS
     query.exec("SELECT COUNT(*) FROM audit_logs WHERE timestamp >= datetime('now', '-1 day')");
     if (query.next() && query.value(0).toInt() > 0)
-        addNotification(QString("%1 user actions logged in last 24 hours.").arg(query.value(0).toInt()), "info");
+        addNotification(QString("%1 user actions logged in last 24 hours.").arg(query.value(0).toInt()), "info", "audit-activity");
 
-
-    //loadd all notifiaction
+    // Load all notifications into UI
     loadDefaultNotifications();
 }
-
 
 void DashBoard::loadDefaultNotifications()
 {

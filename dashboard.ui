@@ -382,7 +382,7 @@ QPushButton:checked{
          <string notr="true">background-color:rgb(245, 248, 255);</string>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="DashBoard_page">
          <layout class="QHBoxLayout" name="horizontalLayout_71">
@@ -4155,6 +4155,137 @@ border-radius: 10px;</string>
              <layout class="QVBoxLayout" name="verticalLayout_notification">
               <item>
                <widget class="QScrollArea" name="scrollArea">
+                <property name="styleSheet">
+                 <string notr="true">QScrollBar:horizontal
+    {
+        height: 15px;
+        margin: 3px 15px 3px 15px;
+        border: 1px transparent #2A2929;
+        border-radius: 4px;
+        background-color: rgb(255, 255, 255);    /* white scroller bg*/
+    }
+
+    QScrollBar::handle:horizontal
+    {
+        background-color: rgb(74, 144, 226);      /* blue scoller */
+        min-width: 5px;
+        border-radius: 4px;
+    }
+
+    QScrollBar::add-line:horizontal
+    {
+        margin: 0px 3px 0px 3px;
+        border-image: url(:/resources/other_icons/arrow_right_disabled.svg);       /* # &lt;-------- */
+        width: 10px;
+        height: 10px;
+        subcontrol-position: right;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::sub-line:horizontal
+    {
+        margin: 0px 3px 0px 3px;
+        border-image: url(:/resources/other_icons/arrow_left_disabled.svg);        /* # &lt;-------- */ 
+        height: 10px;
+        width: 10px;
+        subcontrol-position: left;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::add-line:horizontal:hover,QScrollBar::add-line:horizontal:on
+    {
+        border-image: url(:/resources/other_icons/arrow_right.svg);               /* # &lt;-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: right;
+        subcontrol-origin: margin;
+    }
+
+
+    QScrollBar::sub-line:horizontal:hover, QScrollBar::sub-line:horizontal:on
+    {
+        border-image: url(:/resources/other_icons/arrow_left.svg);               /* # &lt;-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: left;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal
+    {
+        background: none;
+    }
+
+
+    QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
+    {
+        background: none;
+    }
+
+    QScrollBar:vertical
+    {
+        background-color: rgb(255, 255, 255); /*white*/
+        width: 15px;
+        margin: 15px 3px 15px 3px;
+        border: 1px transparent #2A2929;
+        border-radius: 4px;
+    }
+
+    QScrollBar::handle:vertical
+    {
+        background-color: rgb(104, 109, 118);         /* scroller color blue*/
+        min-height: 5px;
+        border-radius: 4px;
+    }
+
+    QScrollBar::sub-line:vertical
+    {
+        margin: 3px 0px 3px 0px;
+        border-image: url(:/resources/other_icons/arrow_up_disabled.svg);        /* # &lt;-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: top;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::add-line:vertical
+    {
+        margin: 3px 0px 3px 0px;
+        border-image: url(:/resources/other_icons/arrow_down_disabled.svg);       /* # &lt;-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: bottom;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::sub-line:vertical:hover,QScrollBar::sub-line:vertical:on
+    {
+        border-image: url(:/resources/other_icons/arrow_up.svg);                  /* # &lt;-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: top;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::add-line:vertical:hover, QScrollBar::add-line:vertical:on
+    {
+        border-image: url(:/resources/other_icons/arrow_down.svg);                /* # &lt;-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: bottom;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+    {
+        background: none;
+    }
+
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+    {
+        background: none;
+    }</string>
+                </property>
                 <property name="widgetResizable">
                  <bool>true</bool>
                 </property>
@@ -4163,13 +4294,18 @@ border-radius: 10px;</string>
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>98</width>
-                   <height>28</height>
+                   <width>824</width>
+                   <height>478</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_11">
                   <item>
-                   <layout class="QVBoxLayout" name="scrollArea_notification_store"/>
+                   <widget class="QFrame" name="Notification_scrollbar_frame">
+                    <property name="styleSheet">
+                     <string notr="true"/>
+                    </property>
+                    <layout class="QVBoxLayout" name="scrollArea_notification_store"/>
+                   </widget>
                   </item>
                  </layout>
                 </widget>
