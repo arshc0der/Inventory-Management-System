@@ -141,8 +141,8 @@ public:
                 product_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 category TEXT NOT NULL,
-                quantity INTEGER NOT NULL,
-                price REAL NOT NULL,
+                quantity INTEGER NOT NULL CHECK (quantity >= 0), -- Restrict quantity only
+                price REAL NOT NULL,                             -- Price can be zero
                 supplier_id INTEGER NOT NULL,
                 purchase_date DATE NOT NULL,
                 minimum_stock_level INTEGER NOT NULL DEFAULT 0,
