@@ -73,6 +73,30 @@ void AddSales::on_ADD_Row_btn_clicked()
         return;
     }
 
+    // Check available stock
+    QSqlQuery stockQuery;
+    stockQuery.prepare("SELECT quantity FROM products WHERE product_id = :id");
+    stockQuery.bindValue(":id", productId);
+
+    if (!stockQuery.exec()) {
+        QMessageBox::critical(this, "Stock Error", "Failed to execute stock query.");
+        return;
+    }
+
+    if (stockQuery.next()) { //Move to the first (and only) row
+        int availableStock = stockQuery.value(0).toInt();
+
+        if (availableStock < quantity) {
+            QMessageBox::warning(this, "Out of Stock",
+                                 QString("Only %1 units available in stock.").arg(availableStock));
+            return;
+        }
+    } else {
+        QMessageBox::critical(this, "Stock Error", "Product not found in inventory.");
+        return;
+    }
+
+
     // Create a new row with the appropriate data
     QList<QStandardItem*> newRow;
     newRow.append(new QStandardItem(productId));         // Product ID
