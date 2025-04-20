@@ -124,5 +124,6 @@
         <file>logo.ico</file>
         <file>resources/vectors/under_development.svg</file>
         <file>resources/vectors/revenue.svg</file>
+        <file>resources/icons/alert.svg</file>
     </qresource>
 </RCC>

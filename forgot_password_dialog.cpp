@@ -10,8 +10,10 @@ Forgot_Password_Dialog::Forgot_Password_Dialog(const QString role, QWidget *pare
 
     if (userRole == "admin") {
         // Setup admin reset UI
+        ui->status_label->setText("Admin");
     } else if (userRole == "employee") {
         // Setup employee reset UI
+        ui->status_label->setText("Employee");
     }
 }
 
@@ -19,3 +21,15 @@ Forgot_Password_Dialog::~Forgot_Password_Dialog()
 {
     delete ui;
 }
+
+void Forgot_Password_Dialog::on_submit_btn_clicked()
+{
+    if (userRole == "admin") {
+        // Setup admin reset UI
+        ui->status_label->setText("Admin");
+    } else if (userRole == "employee") {
+        // Setup employee reset UI
+        ui->status_label->setText("Employee");
+    }
+}
+
