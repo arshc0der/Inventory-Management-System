@@ -44,6 +44,8 @@ private slots:
 
     void on_select_profile_image_clicked();
 
+    void on_password_comboBox_activated(int index);
+
 private:
     Ui::AddEmployee *ui;
 

@@ -116,7 +116,27 @@ void AddEmployee::on_add_employee_btn_clicked()
     double bonus = ui->bonus_doubleSpinBox->value();
     QString profile_picture_url = ui->profile_picture_url_label->text();
     QString employee_type = ui->type_comboBox->currentText().trimmed();
-    QString password = ui->password_create_lineEdit->text();
+
+    QString password;
+    if (ui->password_comboBox->currentText() == "Default") {
+        QString uuidPassword = QUuid::createUuid().toString(QUuid::WithoutBraces).remove("-");
+
+        // Desired length
+        int desiredLength = 8;
+
+        // Ensure it's not longer than the UUID itself
+        if (desiredLength < uuidPassword.length()) {
+            uuidPassword = uuidPassword.left(desiredLength);
+        }
+
+        qDebug() << "Generated UUID Password (length" << desiredLength << "):" << uuidPassword;
+
+        password = uuidPassword;
+    }
+    else if(ui->password_comboBox->currentText()=="Custom"){
+        password = ui->password_create_lineEdit->text();
+    }
+
     bool is_active = (ui->is_active_comboBox->currentText() == "Yes");
 
     QString address = ui->address_lineEdit->text();
@@ -190,7 +210,7 @@ void AddEmployee::on_add_employee_btn_clicked()
 
     bool settings_dashboard = getCheckboxState(ui->settings_dashbaord_checkBox);
 
-    int force_password_change =1;
+
 
     // Step 4: Prepare SQL query
     QSqlQuery query;
@@ -246,7 +266,8 @@ void AddEmployee::on_add_employee_btn_clicked()
     query.bindValue(":notes", notes);
     query.bindValue(":manager_id", manager_id.toInt());
     query.bindValue(":employment_status", employment_status);
-    query.bindValue("force_password_change",force_password_change);
+    query.bindValue(":force_password_change", 1); // or 0 depending on your logic
+
 
     qDebug() << "Executed Query:" << query.executedQuery();
     qDebug() << "Bound Values:" << query.boundValues();
@@ -321,7 +342,7 @@ void AddEmployee::on_add_employee_btn_clicked()
     }
 
     // Step 8: Show success message and clear the form
-    QMessageBox::information(this, "Success", "Employee added and permissions assigned successfully.");
+    QMessageBox::information(this, "Success", "Employee added and permissions assigned successfully.\nPassword : "+password);
 
     ui->name_lineEdit->clear();
     ui->email_lineEdit->clear();
@@ -526,6 +547,19 @@ void AddEmployee::on_select_profile_image_clicked()
         }
     } else {
         qDebug() << "No file selected.";
+    }
+}
+
+
+
+void AddEmployee::on_password_comboBox_activated(int index)
+{
+    QString selectedText = ui->password_comboBox->itemText(index);
+
+    if (selectedText == "Custom") {
+        ui->custom_password_horizontalFrame->setVisible(true);
+    } else if (selectedText == "Default") {
+        ui->custom_password_horizontalFrame->setVisible(false);
     }
 }
 

@@ -54,7 +54,7 @@ void Reset_Password_Dialog::on_reset_btn_clicked()
     if (userRole == "admin") {
         validateQuery.prepare("SELECT password_reset_expiry FROM users WHERE id = :id AND password_reset_token = :token");
     } else if (userRole == "employee") {
-        validateQuery.prepare("SELECT password_reset_expiry FROM employees WHERE id = :id AND password_reset_token = :token");
+        //validateQuery.prepare("SELECT password_reset_expiry FROM employees WHERE id = :id AND password_reset_token = :token");
     } else {
         QMessageBox::critical(this, "Error", "Unknown user role.");
         return;
@@ -63,16 +63,19 @@ void Reset_Password_Dialog::on_reset_btn_clicked()
     validateQuery.bindValue(":id", userID);
     validateQuery.bindValue(":token", resetToken);
 
-    if (!validateQuery.exec() || !validateQuery.next()) {
-        QMessageBox::critical(this, "Invalid", "Invalid or expired reset token.");
-        return;
+    if (userRole == "admin"){
+        if (!validateQuery.exec() || !validateQuery.next()) {
+            QMessageBox::critical(this, "Invalid", "Invalid or expired reset token.");
+            return;
+        }
+
+        QDateTime expiry = QDateTime::fromString(validateQuery.value(0).toString(), Qt::ISODate);
+        if (QDateTime::currentDateTime() > expiry) {
+            QMessageBox::warning(this, "Expired", "Reset token has expired.");
+            return;
+        }
     }
 
-    QDateTime expiry = QDateTime::fromString(validateQuery.value(0).toString(), Qt::ISODate);
-    if (QDateTime::currentDateTime() > expiry) {
-        QMessageBox::warning(this, "Expired", "Reset token has expired.");
-        return;
-    }
 
     // 🔐 Step 2: Generate salt and hash
     QString password_salt = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
@@ -84,7 +87,15 @@ void Reset_Password_Dialog::on_reset_btn_clicked()
     if (userRole == "admin") {
         query.prepare("UPDATE users SET password_hash = :hash, password_salt = :salt, password_reset_token = NULL, password_reset_expiry = NULL WHERE id = :id");
     } else if (userRole == "employee") {
-        query.prepare("UPDATE employees SET password_hash = :hash, password_salt = :salt, password_reset_token = NULL, password_reset_expiry = NULL WHERE id = :id");
+        query.prepare(R"(
+    UPDATE employees
+    SET password_hash = :hash,
+        password_salt = :salt,
+        password_reset_token = NULL,
+        password_reset_expiry = NULL,
+        force_password_change = 0
+    WHERE employee_id = :id
+)");
     }
 
     query.bindValue(":hash", password_hash);

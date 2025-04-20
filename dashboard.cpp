@@ -113,6 +113,36 @@ DashBoard::DashBoard(QWidget *parent)
             }
         }
     }
+
+    if(!GlobalFunctions::is_admin()){
+        int employee_id = GlobalFunctions::get_user_id();
+
+        // Create a query object
+        QSqlQuery query;
+
+        // Prepare the SQL query
+        query.prepare("SELECT force_password_change FROM employees WHERE employee_id = :employee_id AND force_password_change = 1");
+
+        // Bind the employee_id value to the query
+        query.bindValue(":employee_id", employee_id);
+
+        // Execute the query
+        if (!query.exec()) {
+            // Handle error if query execution fails
+            qDebug() << "Query failed: " << query.lastError().text();
+        }
+
+        // Check if a record was returned
+        if (query.next()) {
+            // If the query returns a result, it means force_password_change is 1
+            Reset_Dialog = new Reset_Password_Dialog("employee",QString::number(employee_id),"",this);
+            Reset_Dialog->exec();
+
+        } else {
+            // No record found with force_password_change = 1 for the given employee_id
+        }
+
+    }
 }
 
 DashBoard::~DashBoard()

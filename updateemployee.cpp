@@ -84,8 +84,21 @@ void UpdateEmployee::on_reset_btn_clicked()
     QString employeeId = model->data(model->index(row, model->fieldIndex("employee_id"))).toString();
     QString email = model->data(model->index(row, model->fieldIndex("email"))).toString();
 
+    QString uuidPassword = QUuid::createUuid().toString(QUuid::WithoutBraces).remove("-");
+
+    // Desired length
+    int desiredLength = 8;
+
+    // Ensure it's not longer than the UUID itself
+    if (desiredLength < uuidPassword.length()) {
+        uuidPassword = uuidPassword.left(desiredLength);
+    }
+
+    qDebug() << "Generated UUID Password (length" << desiredLength << "):" << uuidPassword;
+
+
     // Generate temporary password (e.g., using employee ID)
-    QString tempPassword = employeeId;  // You can customize this pattern
+    QString tempPassword = uuidPassword;  // You can customize this pattern
     QString salt = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
     QByteArray salted = (tempPassword + salt).toUtf8();
     QString hash = QString(QCryptographicHash::hash(salted, QCryptographicHash::Sha256).toHex());

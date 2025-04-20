@@ -22,6 +22,8 @@
 #include <addadjustment.h>
 //check admin
 #include <check_admin.h>
+#include <reset_password_dialog.h>
+
 namespace Ui {
 class DashBoard;
 }
@@ -116,6 +118,7 @@ private:
     AddAdjustment *Add_Adjustment;
     //check admin
     check_Admin *check_Admin_Dialog;
+    Reset_Password_Dialog *Reset_Dialog;
 
     //charts
     void Sales_Trends_loader();
