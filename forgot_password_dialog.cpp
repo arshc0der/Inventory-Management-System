@@ -46,6 +46,7 @@ void Forgot_Password_Dialog::on_submit_btn_clicked()
         query.bindValue(":pin", pin);
 
         if (query.exec()) {
+            QString id = query.value("id").toString();  // gettting id
             if (query.next()) {
                 bool isActive = query.value("is_active").toBool();
                 bool isLocked = query.value("account_locked").toBool();
@@ -73,12 +74,12 @@ void Forgot_Password_Dialog::on_submit_btn_clicked()
                 if (updateQuery.exec()) {
                     qDebug() << "Reset token created for email:" << email << "Token:" << resetToken;
                     QMessageBox::information(this, "Verified", "Reset token generated. Proceed to password reset.");
-/*
+
                     // Proceed to open the Reset Password Dialog
-                    ResetPasswordDialog *resetDialog = new ResetPasswordDialog(this);
-                    resetDialog->setUserEmail(email);  // implement setUserEmail() in ResetPasswordDialog
-                    resetDialog->exec();
-*/
+                    Reset_Dialog = new Reset_Password_Dialog(userRole,id,this);
+                    //resetDialog->setUserEmail(email);  // implement setUserEmail() in ResetPasswordDialog
+                    Reset_Dialog->exec();
+
                 } else {
                     QMessageBox::critical(this, "Error", "Failed to generate reset token.");
                     qDebug() << "Token update error:" << updateQuery.lastError().text();

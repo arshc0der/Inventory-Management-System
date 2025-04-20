@@ -34,6 +34,7 @@ SOURCES += \
     products_loader.cpp \
     register.cpp \
     registercustomer.cpp \
+    reset_password_dialog.cpp \
     salestrends_chart.cpp \
     updateemployee.cpp \
     updateorders.cpp \
@@ -69,6 +70,7 @@ HEADERS += \
     products_loader.h \
     register.h \
     registercustomer.h \
+    reset_password_dialog.h \
     salestrends_chart.h \
     updateemployee.h \
     updateorders.h \
@@ -101,6 +103,7 @@ FORMS += \
     products_loader.ui \
     register.ui \
     registercustomer.ui \
+    reset_password_dialog.ui \
     salestrends_chart.ui \
     updateemployee.ui \
     updateorders.ui \

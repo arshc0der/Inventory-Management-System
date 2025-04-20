@@ -2,6 +2,7 @@
 #define FORGOT_PASSWORD_DIALOG_H
 
 #include <QDialog>
+#include <reset_password_dialog.h>
 
 namespace Ui {
 class Forgot_Password_Dialog;
@@ -21,6 +22,7 @@ private slots:
 private:
     Ui::Forgot_Password_Dialog *ui;
     QString userRole; // Store the role internally
+    Reset_Password_Dialog *Reset_Dialog;
 };
 
 #endif // FORGOT_PASSWORD_DIALOG_H
