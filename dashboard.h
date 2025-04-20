@@ -20,7 +20,8 @@
 #include <deletepromotion.h>
 #include <updatepermissions.h>
 #include <addadjustment.h>
-
+//check admin
+#include <check_admin.h>
 namespace Ui {
 class DashBoard;
 }
@@ -113,6 +114,8 @@ private:
     DeletePromotion *Delete_Promotion;
     UpdatePermissions *Update_Permissions;
     AddAdjustment *Add_Adjustment;
+    //check admin
+    check_Admin *check_Admin_Dialog;
 
     //charts
     void Sales_Trends_loader();

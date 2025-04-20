@@ -16,6 +16,7 @@ SOURCES += \
     addproduct.cpp \
     addpromotion.cpp \
     addsales.cpp \
+    check_admin.cpp \
     checkdiscount.cpp \
     dashboard.cpp \
     deleteemployee.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     addproduct.h \
     addpromotion.h \
     addsales.h \
+    check_admin.h \
     checkdiscount.h \
     dashboard.h \
     deleteemployee.h \
@@ -87,6 +89,7 @@ FORMS += \
     addproduct.ui \
     addpromotion.ui \
     addsales.ui \
+    check_admin.ui \
     checkdiscount.ui \
     dashboard.ui \
     deleteemployee.ui \

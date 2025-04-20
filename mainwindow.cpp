@@ -22,6 +22,22 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->toggle_button_admin_circle->hide();
+
+    //hide create account button for security reasons
+    QSqlQuery checkAdmin;
+    checkAdmin.prepare("SELECT COUNT(*) FROM users");
+
+    if (checkAdmin.exec() && checkAdmin.next()) {
+        int adminCount = checkAdmin.value(0).toInt();
+
+        if (adminCount > 0) {
+            ui->pushButton->hide();
+        }
+    }
+
+    //hide the forget button
+    ui->forgot_password_btn->setVisible(false);
+
 }
 
 MainWindow::~MainWindow()
@@ -300,6 +316,9 @@ void MainWindow::on_toggle_button_main_circle_clicked()
         ui->title_job_label->setText("Login as Admin");
         admin = true;
         employee = false;
+        //visible the forget button
+        ui->forgot_password_btn->setVisible(true);
+
         fadeInAdmin->start(QAbstractAnimation::DeleteWhenStopped);
     });
 
@@ -336,6 +355,10 @@ void MainWindow::on_toggle_button_admin_circle_clicked()
         ui->title_job_label->setText("Login as Employee");
         admin = false;
         employee=true;
+
+        //hide the forget button
+        ui->forgot_password_btn->setVisible(false);
+
         fadeInMain->start(QAbstractAnimation::DeleteWhenStopped);
     });
 
@@ -348,10 +371,9 @@ void MainWindow::on_forgot_password_btn_clicked()
         // Admin is logged in
         Forgot_Password = new Forgot_Password_Dialog("admin");
         Forgot_Password->exec();
+        //ui->forgot_password_btn->setVisible(true);
     } else if (!admin && employee) {
-        // Employee is logged in
-        Forgot_Password = new Forgot_Password_Dialog("employee");
-        Forgot_Password->exec();
+        //ui->forgot_password_btn->setVisible(false);
     } else {
         // Optional: Handle case where neither or both are true (invalid state)
         QMessageBox::warning(this, "Error", "Invalid user role detected.");

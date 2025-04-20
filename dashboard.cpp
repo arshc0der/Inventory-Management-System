@@ -88,6 +88,31 @@ DashBoard::DashBoard(QWidget *parent)
     if (GlobalFunctions::hasPermission("settings_dashboard")) {
         fetchEmployeeInfo(GlobalFunctions::get_user_id());
     }
+
+    //showing the info of multiple admin accounts deleted
+    if(GlobalFunctions::is_admin()){
+        QSqlQuery checkAdmin;
+        checkAdmin.prepare("SELECT COUNT(*) FROM users");
+
+        if (checkAdmin.exec() && checkAdmin.next()) {
+            int adminCount = checkAdmin.value(0).toInt();
+
+            if (adminCount > 1) {
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::warning(this, "Multiple Admins Detected",
+                                             QString("There are %1 admin accounts in the system!\n"
+                                                     "Only 1 admin is allowed.\n\n"
+                                                     "Do you want to delete the extra admin accounts?")
+                                                 .arg(adminCount),
+                                             QMessageBox::Yes | QMessageBox::No);
+
+                if (reply == QMessageBox::Yes) {
+                    check_Admin_Dialog = new check_Admin(nullptr);
+                    check_Admin_Dialog->show();
+                }
+            }
+        }
+    }
 }
 
 DashBoard::~DashBoard()
