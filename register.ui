@@ -953,6 +953,9 @@ border-radius:10px;</string>
                <string notr="true">padding:10px;
 border:none;</string>
               </property>
+              <property name="echoMode">
+               <enum>QLineEdit::EchoMode::Password</enum>
+              </property>
               <property name="placeholderText">
                <string>Set a PIN</string>
               </property>
