@@ -21,6 +21,8 @@ public:
 private slots:
     void on_Update_btn_clicked();
 
+    void on_reset_btn_clicked();
+
 private:
     Ui::UpdateEmployee *ui;
     void refreshTable();

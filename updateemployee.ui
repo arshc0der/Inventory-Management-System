@@ -95,6 +95,35 @@ border-radius:10px;</string>
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="reset_btn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton{
+background-color: rgb(246, 175, 58);
+color: rgb(255, 255, 255);
+border:none;
+padding: 10px;
+}
+QPushButton:hover{
+background-color: rgb(194, 137, 46);
+}</string>
+           </property>
+           <property name="text">
+            <string>Reset Password</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="Update_btn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">

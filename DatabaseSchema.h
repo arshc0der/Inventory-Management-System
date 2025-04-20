@@ -293,7 +293,8 @@ public:
                 previous_employer TEXT,
                 notes TEXT,
                 manager_id INTEGER,
-                employment_status TEXT
+                employment_status TEXT,
+                force_password_change BOOLEAN DEFAULT 1
             );
         )";
         executeQuery(query, createEmployeesTable, "'employees' table");

@@ -9,6 +9,10 @@
 #include <QDate>
 #include <QDebug>
 
+//hashing
+#include <QUuid>
+#include <QCryptographicHash>
+
 UpdateEmployee::UpdateEmployee(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::UpdateEmployee)
@@ -66,3 +70,37 @@ void UpdateEmployee::refreshTable(){
         tableView->setColumnWidth(column, qMax(tableView->columnWidth(column), 100));  // Minimum width is 100px
     }
 }
+
+void UpdateEmployee::on_reset_btn_clicked()
+{
+    QModelIndexList selectedRows = tableView->selectionModel()->selectedRows();
+
+    if (selectedRows.isEmpty()) {
+        QMessageBox::warning(this, "No Selection", "Please select an employee.");
+        return;
+    }
+
+    int row = selectedRows.first().row();
+    QString employeeId = model->data(model->index(row, model->fieldIndex("id"))).toString();
+    QString email = model->data(model->index(row, model->fieldIndex("email"))).toString(); // if you use email
+
+    // Generate temp password (you can use employeeId or random)
+    QString tempPassword = employeeId;  // Or QString("Emp@%1").arg(employeeId)
+    QString salt = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
+    QByteArray salted = (tempPassword + salt).toUtf8();
+    QString hash = QString(QCryptographicHash::hash(salted, QCryptographicHash::Sha256).toHex());
+
+    QSqlQuery query;
+    query.prepare("UPDATE employees SET password_hash = :hash, password_salt = :salt WHERE id = :id");
+    query.bindValue(":hash", hash);
+    query.bindValue(":salt", salt);
+    query.bindValue(":id", employeeId);
+
+    if (query.exec()) {
+        QMessageBox::information(this, "Password Reset",
+                                 QString("Password has been reset to: %1").arg(tempPassword));
+    } else {
+        QMessageBox::critical(this, "Error", "Failed to reset password: " + query.lastError().text());
+    }
+}
+
