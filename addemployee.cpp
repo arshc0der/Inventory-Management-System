@@ -190,6 +190,8 @@ void AddEmployee::on_add_employee_btn_clicked()
 
     bool settings_dashboard = getCheckboxState(ui->settings_dashbaord_checkBox);
 
+    int force_password_change =1;
+
     // Step 4: Prepare SQL query
     QSqlQuery query;
     query.prepare(R"(
@@ -198,14 +200,14 @@ void AddEmployee::on_add_employee_btn_clicked()
         profile_picture, employee_type, password_hash, password_salt, is_active, address, date_of_birth, gender,
         national_id, emergency_contact_name, emergency_contact_phone, bank_account_number, bank_name,
         tax_identification_number, social_security_number, work_permit_number, join_date, work_email, shift_timing,
-        skills, previous_employer, notes, manager_id, employment_status
+        skills, previous_employer, notes, manager_id, employment_status, force_password_change
     )
     VALUES (
         :name, :email, :phone_number, :role, :department, :hire_date, :termination_date, :status, :salary, :bonus,
         :profile_picture, :employee_type, :password_hash, :password_salt, :is_active, :address, :date_of_birth, :gender,
         :national_id, :emergency_contact_name, :emergency_contact_phone, :bank_account_number, :bank_name,
         :tax_identification_number, :social_security_number, :work_permit_number, :join_date, :work_email, :shift_timing,
-        :skills, :previous_employer, :notes, :manager_id, :employment_status
+        :skills, :previous_employer, :notes, :manager_id, :employment_status, :force_password_change
     )
 )");
 
@@ -244,6 +246,7 @@ void AddEmployee::on_add_employee_btn_clicked()
     query.bindValue(":notes", notes);
     query.bindValue(":manager_id", manager_id.toInt());
     query.bindValue(":employment_status", employment_status);
+    query.bindValue("force_password_change",force_password_change);
 
     qDebug() << "Executed Query:" << query.executedQuery();
     qDebug() << "Bound Values:" << query.boundValues();

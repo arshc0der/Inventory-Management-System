@@ -81,26 +81,29 @@ void UpdateEmployee::on_reset_btn_clicked()
     }
 
     int row = selectedRows.first().row();
-    QString employeeId = model->data(model->index(row, model->fieldIndex("id"))).toString();
-    QString email = model->data(model->index(row, model->fieldIndex("email"))).toString(); // if you use email
+    QString employeeId = model->data(model->index(row, model->fieldIndex("employee_id"))).toString();
+    QString email = model->data(model->index(row, model->fieldIndex("email"))).toString();
 
-    // Generate temp password (you can use employeeId or random)
-    QString tempPassword = employeeId;  // Or QString("Emp@%1").arg(employeeId)
+    // Generate temporary password (e.g., using employee ID)
+    QString tempPassword = employeeId;  // You can customize this pattern
     QString salt = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
     QByteArray salted = (tempPassword + salt).toUtf8();
     QString hash = QString(QCryptographicHash::hash(salted, QCryptographicHash::Sha256).toHex());
 
+    // Update password_hash, password_salt, and force_password_change
     QSqlQuery query;
-    query.prepare("UPDATE employees SET password_hash = :hash, password_salt = :salt WHERE id = :id");
+    query.prepare("UPDATE employees SET password_hash = :hash, password_salt = :salt, force_password_change = 1 WHERE employee_id = :id");
     query.bindValue(":hash", hash);
     query.bindValue(":salt", salt);
     query.bindValue(":id", employeeId);
 
     if (query.exec()) {
         QMessageBox::information(this, "Password Reset",
-                                 QString("Password has been reset to: %1").arg(tempPassword));
+                                 QString("Password has been reset to: %1\nPlease ask the employee to log in and change it.")
+                                     .arg(tempPassword));
     } else {
-        QMessageBox::critical(this, "Error", "Failed to reset password: " + query.lastError().text());
+        QMessageBox::critical(this, "Error", "Failed to reset password:\n" + query.lastError().text());
     }
 }
+
 
