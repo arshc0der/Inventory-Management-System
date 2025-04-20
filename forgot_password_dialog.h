@@ -15,6 +15,9 @@ public:
     explicit Forgot_Password_Dialog(const QString role,QWidget *parent = nullptr);
     ~Forgot_Password_Dialog();
 
+private slots:
+    void on_submit_btn_clicked();
+
 private:
     Ui::Forgot_Password_Dialog *ui;
     QString userRole; // Store the role internally
