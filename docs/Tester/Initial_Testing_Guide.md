@@ -19,9 +19,9 @@ This guide provides steps to set up and test the IMS (Inventory Management Syste
 4. Inside the `IMS` folder, locate and delete the file `i_m_s.db`.
 
 ### 2. Download the Test Database
-1. Visit the GitHub repository where the test database is hosted.
-2. Download the latest version of the `i_m_s.db` file from the repository.
-3. Copy the downloaded file into the `IMS` folder in `%APPDATA%`.
+1. Download the latest version of the `i_m_s.db` file from the repository.
+ - [Download the i_m_s.db file from GitHub](https://github.com/arshc0der/Inventory-Management-System/blob/main/docs/Tester/Testing_Database_File/i_m_s.db)
+2. Copy the downloaded file into the `IMS` folder in `%APPDATA%`.
 
 ### 3. Verify the Database is Loaded
 1. Open the IMS software again.
