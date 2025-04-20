@@ -598,6 +598,28 @@ QPushButton:hover{
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QPushButton" name="forgot_password_btn">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton{
+padding:0;
+color: rgb(104, 109, 118);
+}
+QPushButton:hover{
+	color: rgb(74, 144, 226);
+}</string>
+              </property>
+              <property name="text">
+               <string>Forgot Password? Need Help</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>

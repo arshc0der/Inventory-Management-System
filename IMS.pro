@@ -23,6 +23,7 @@ SOURCES += \
     deleteproduct.cpp \
     deletepromotion.cpp \
     deletesales.cpp \
+    forgot_password_dialog.cpp \
     globalfunctions.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     deleteproduct.h \
     deletepromotion.h \
     deletesales.h \
+    forgot_password_dialog.h \
     globalfunctions.h \
     mainwindow.h \
     manageactivity.h \
@@ -90,6 +92,7 @@ FORMS += \
     deleteproduct.ui \
     deletepromotion.ui \
     deletesales.ui \
+    forgot_password_dialog.ui \
     mainwindow.ui \
     manageactivity.ui \
     notification.ui \

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <register.h>
 #include <dashboard.h>
+#include <forgot_password_dialog.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,9 +35,12 @@ private slots:
 
     void on_toggle_button_admin_circle_clicked();
 
+    void on_forgot_password_btn_clicked();
+
 private:
     Ui::MainWindow *ui;
     Register *reg;
     DashBoard *dash_board;
+    Forgot_Password_Dialog *Forgot_Password;
 };
 #endif // MAINWINDOW_H

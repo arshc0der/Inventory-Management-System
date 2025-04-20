@@ -341,3 +341,20 @@ void MainWindow::on_toggle_button_admin_circle_clicked()
 
     fadeOutAdmin->start(QAbstractAnimation::DeleteWhenStopped);
 }
+
+void MainWindow::on_forgot_password_btn_clicked()
+{
+    if (admin && !employee) {
+        // Admin is logged in
+        Forgot_Password = new Forgot_Password_Dialog("admin");
+        Forgot_Password->exec();
+    } else if (!admin && employee) {
+        // Employee is logged in
+        Forgot_Password = new Forgot_Password_Dialog("employee");
+        Forgot_Password->exec();
+    } else {
+        // Optional: Handle case where neither or both are true (invalid state)
+        QMessageBox::warning(this, "Error", "Invalid user role detected.");
+    }
+}
+
