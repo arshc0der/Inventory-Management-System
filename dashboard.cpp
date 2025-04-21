@@ -23,13 +23,55 @@ DashBoard::DashBoard(QWidget *parent)
 {
     ui->setupUi(this);
 
+    if (GlobalFunctions::is_admin()) {
+        // Admin Dashboard
+        ui->stackedWidget->setCurrentIndex(0);
+
+        //charts
+        Sales_Trends_loader();
+        Products_Hightlights_Min_Level_Chart_Loader();
+        Orders_Trends_Loader();
+
+    } else {
+        if (GlobalFunctions::hasPermission("product_dashboard")) {
+            ui->stackedWidget->setCurrentIndex(1);
+        } else if (GlobalFunctions::hasPermission("sales_dashboard")) {
+            ui->stackedWidget->setCurrentIndex(2);
+        } else if (GlobalFunctions::hasPermission("orders_dashboard")) {
+            ui->stackedWidget->setCurrentIndex(3);
+        } else if (GlobalFunctions::hasPermission("activity_dashboard")) {
+            ui->stackedWidget->setCurrentIndex(5);
+        } else if (GlobalFunctions::hasPermission("promotion_dashboard")) {
+            ui->stackedWidget->setCurrentIndex(7);
+        } else if (GlobalFunctions::hasPermission("user_dashboard")) {
+            ui->stackedWidget->setCurrentIndex(6);
+        } else if (GlobalFunctions::hasPermission("settings_dashboard")) {
+            ui->stackedWidget->setCurrentIndex(9);
+        } else if (GlobalFunctions::hasPermission("adjustment_Stock")) {
+            ui->stackedWidget->setCurrentIndex(8);
+        } else {
+            // Modal popup with only "Close" button and no access to other windows
+            QMessageBox msgBox;
+            msgBox.setWindowTitle("Permission Error");
+            msgBox.setText("You are registered but have not been assigned any dashboard permissions.\n"
+                           "Please contact your system administrator to request access.");
+            msgBox.setIcon(QMessageBox::Warning);
+            msgBox.setStandardButtons(QMessageBox::Close);
+            msgBox.setDefaultButton(QMessageBox::Close);
+            msgBox.setWindowModality(Qt::ApplicationModal);  // Block all other windows
+            msgBox.exec();
+
+            // Optional: Close application or go to a blank/inactive screen
+            QApplication::quit();
+            // OR just block interaction with dashboard by staying on a locked screen
+            // ui->stackedWidget->setCurrentIndex(10);
+        }
+    }
+
+
     //insert deafult notification
     insertStartupNotifications();
 
-    //charts
-    Sales_Trends_loader();
-    Products_Hightlights_Min_Level_Chart_Loader();
-    Orders_Trends_Loader();
 
     //product Dashboard
     if (GlobalFunctions::hasPermission("product_dashboard")) {

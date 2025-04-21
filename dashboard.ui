@@ -141,7 +141,7 @@ QPushButton:checked{
 }</string>
             </property>
             <property name="text">
-             <string>Supplier</string>
+             <string>Sales</string>
             </property>
             <property name="icon">
              <iconset>
@@ -382,7 +382,7 @@ QPushButton:checked{
          <string notr="true">background-color:rgb(245, 248, 255);</string>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>9</number>
         </property>
         <widget class="QWidget" name="DashBoard_page">
          <layout class="QHBoxLayout" name="horizontalLayout_71">
