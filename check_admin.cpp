@@ -73,7 +73,7 @@ void check_Admin::on_Delete_btn_clicked()
 
         // Remove the associated permissions from the permissions table using employee_id
         QSqlQuery deletePermissionsQuery;
-        deletePermissionsQuery.prepare("DELETE FROM permissions WHERE user_id = :user_id");
+        deletePermissionsQuery.prepare("DELETE FROM User_permissions WHERE user_id = :user_id");
         deletePermissionsQuery.bindValue(":user_id", employeeId);  // Use employeeId as the user_id in the permissions table
 
         if (!deletePermissionsQuery.exec()) {

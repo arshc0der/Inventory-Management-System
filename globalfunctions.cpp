@@ -76,8 +76,14 @@ bool GlobalFunctions::loadPermissions() {
     // Clear the previous permissions in case this is called again
     permissions.clear();
 
+
     QSqlQuery query;
-    query.prepare("SELECT * FROM permissions WHERE user_id = ?");
+
+    if(is_admin()){
+        query.prepare("SELECT * FROM User_permissions WHERE user_id = ?");
+    }else if(!is_admin()){
+        query.prepare("SELECT * FROM permissions WHERE user_id = ?");
+    }
     query.addBindValue(user_ID);  // Use the static user ID
 
     if (query.exec()) {

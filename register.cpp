@@ -160,7 +160,7 @@ void Register::on_register_btn_clicked()
         // Insert into permissions table with all permissions set to true
         QSqlQuery permissionQuery;
         permissionQuery.prepare(R"(
-            INSERT INTO permissions (
+            INSERT INTO User_permissions (
                 user_id,
                 product_dashboard, add_product, update_products, delete_products, advance_view_products, adjustment_Stock,
                 sales_dashboard, add_sales, update_sales, delete_sales, advance_view_sales,

@@ -79,6 +79,50 @@ public:
         executeQuery(query, createBusinessLogosTable, "'business_logos' table");
         setAutoIncrementStart(query, "business_logos", 1034000);
 
+        //User Permissions Table
+        QString createUser_permissionsTable = R"(
+            CREATE TABLE IF NOT EXISTS User_permissions (
+                user_id INTEGER PRIMARY KEY, -- or role_id if using roles
+                product_dashboard BOOLEAN DEFAULT FALSE,
+                add_product BOOLEAN DEFAULT FALSE,
+                update_products BOOLEAN DEFAULT FALSE,
+                delete_products BOOLEAN DEFAULT FALSE,
+                advance_view_products BOOLEAN DEFAULT FALSE,
+                adjustment_Stock BOOLEAN DEFAULT FALSE,
+
+                sales_dashboard BOOLEAN DEFAULT FALSE,
+                add_sales BOOLEAN DEFAULT FALSE,
+                update_sales BOOLEAN DEFAULT FALSE,
+                delete_sales BOOLEAN DEFAULT FALSE,
+                advance_view_sales BOOLEAN DEFAULT FALSE,
+
+                orders_dashboard BOOLEAN DEFAULT FALSE,
+                add_orders BOOLEAN DEFAULT FALSE,
+                update_orders BOOLEAN DEFAULT FALSE,
+                delete_orders BOOLEAN DEFAULT FALSE,
+                advance_view_orders BOOLEAN DEFAULT FALSE,
+
+                activity_dashboard BOOLEAN DEFAULT FALSE,
+                notification_dashboard BOOLEAN DEFAULT FALSE,
+
+                promotion_dashboard BOOLEAN DEFAULT FALSE,
+                add_promotion BOOLEAN DEFAULT FALSE,
+                update_promotion BOOLEAN DEFAULT FALSE,
+                delete_promotion BOOLEAN DEFAULT FALSE,
+                advance_view_promotion BOOLEAN DEFAULT FALSE,
+
+                user_dashboard BOOLEAN DEFAULT FALSE,
+                add_employees BOOLEAN DEFAULT FALSE,
+                update_employees BOOLEAN DEFAULT FALSE,
+                delete_employees BOOLEAN DEFAULT FALSE,
+                advance_view_employees BOOLEAN DEFAULT FALSE,
+                settings_dashboard BOOLEAN DEFAULT FALSE
+            );
+        )";
+
+        executeQuery(query, createUser_permissionsTable, "'User_permissions' table");
+        setAutoIncrementStart(query, "User_permissions", 9200001);
+
         //Permissions Table
         QString createPermissionsTable = R"(
             CREATE TABLE IF NOT EXISTS permissions (
