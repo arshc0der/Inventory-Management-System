@@ -89,6 +89,7 @@ bool GlobalFunctions::loadPermissions() {
     if (query.exec()) {
         if (query.next()) {
             // Map each permission from the table to the permissions map
+            permissions["dashboard_access"] = query.value("dashboard_access").toBool();
             permissions["product_dashboard"] = query.value("product_dashboard").toBool();
             permissions["add_product"] = query.value("add_product").toBool();
             permissions["update_products"] = query.value("update_products").toBool();

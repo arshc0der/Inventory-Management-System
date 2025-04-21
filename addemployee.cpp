@@ -173,6 +173,7 @@ void AddEmployee::on_add_employee_btn_clicked()
     //Gather permission values from checkboxes
     auto getCheckboxState = [](QCheckBox *checkbox) { return checkbox->checkState() == Qt::Checked; };
 
+    bool main_dashboard = getCheckboxState(ui->main_dashbaord_checkBox);
     bool product_dashboard = getCheckboxState(ui->product_dashbaord_checkBox);
     bool add_product = getCheckboxState(ui->product_dashbaord_checkBox_add);
     bool update_products = getCheckboxState(ui->product_dashbaord_checkBox_update);
@@ -283,14 +284,14 @@ void AddEmployee::on_add_employee_btn_clicked()
     // Step 7: Insert permissions for the new employee
     QSqlQuery permissionQuery;
     permissionQuery.prepare(R"(
-        INSERT INTO permissions (user_id, product_dashboard, add_product, update_products, delete_products, advance_view_products,adjustment_Stock,
+        INSERT INTO permissions (user_id, dashboard_access, product_dashboard, add_product, update_products, delete_products, advance_view_products,adjustment_Stock,
                                  sales_dashboard, add_sales, update_sales, delete_sales, advance_view_sales,
                                  orders_dashboard, add_orders, update_orders, delete_orders, advance_view_orders,
                                  activity_dashboard, notification_dashboard, promotion_dashboard, add_promotion,
                                  update_promotion, delete_promotion, advance_view_promotion,
                                  user_dashboard, add_employees, update_employees, delete_employees, advance_view_employees,
                                  settings_dashboard)
-        VALUES (:user_id, :product_dashboard, :add_product, :update_products, :delete_products, :advance_view_products, :adjustment_Stock,
+        VALUES (:user_id, :dashboard_access, :product_dashboard, :add_product, :update_products, :delete_products, :advance_view_products, :adjustment_Stock,
                 :sales_dashboard, :add_sales, :update_sales, :delete_sales, :advance_view_sales,
                 :orders_dashboard, :add_orders, :update_orders, :delete_orders, :advance_view_orders,
                 :activity_dashboard, :notification_dashboard, :promotion_dashboard, :add_promotion,
@@ -300,6 +301,7 @@ void AddEmployee::on_add_employee_btn_clicked()
     )");
 
     permissionQuery.bindValue(":user_id", employee_id);
+    permissionQuery.bindValue(":dashboard_access", main_dashboard);
     permissionQuery.bindValue(":product_dashboard", product_dashboard);
     permissionQuery.bindValue(":add_product", add_product);
     permissionQuery.bindValue(":update_products", update_products);
@@ -477,6 +479,7 @@ void AddEmployee::reset_permission(){
     ui->user_dashbaord_checkBox_delete->setCheckState(Qt::Unchecked);
     ui->user_dashbaord_checkBox_advanceview->setCheckState(Qt::Unchecked);
 
+    ui->main_dashbaord_checkBox->setCheckState(Qt::Unchecked);
     ui->activity_dashbaord_checkBox->setCheckState(Qt::Unchecked);
     ui->notification_dashbaord_checkBox->setCheckState(Qt::Unchecked);
     ui->settings_dashbaord_checkBox->setCheckState(Qt::Unchecked);

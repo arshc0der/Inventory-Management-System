@@ -286,7 +286,7 @@ background-color: rgb(57, 112, 175);
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-343</y>
+                 <y>0</y>
                  <width>537</width>
                  <height>1849</height>
                 </rect>
@@ -3428,8 +3428,8 @@ background-color: rgb(255, 255, 255);
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>0</y>
-                 <width>559</width>
+                 <y>-690</y>
+                 <width>657</width>
                  <height>1306</height>
                 </rect>
                </property>
@@ -4255,6 +4255,16 @@ color: rgb(14, 28, 44);</string>
                       <property name="spacing">
                        <number>0</number>
                       </property>
+                      <item>
+                       <widget class="QCheckBox" name="main_dashbaord_checkBox">
+                        <property name="styleSheet">
+                         <string notr="true">background:none;</string>
+                        </property>
+                        <property name="text">
+                         <string>Dashboard</string>
+                        </property>
+                       </widget>
+                      </item>
                       <item>
                        <widget class="QCheckBox" name="activity_dashbaord_checkBox">
                         <property name="font">

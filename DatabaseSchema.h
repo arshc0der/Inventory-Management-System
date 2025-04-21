@@ -127,6 +127,7 @@ public:
         QString createPermissionsTable = R"(
             CREATE TABLE IF NOT EXISTS permissions (
                 user_id INTEGER PRIMARY KEY, -- or role_id if using roles
+                dashboard_access BOOLEAN DEFAULT FALSE,
                 product_dashboard BOOLEAN DEFAULT FALSE,
                 add_product BOOLEAN DEFAULT FALSE,
                 update_products BOOLEAN DEFAULT FALSE,
@@ -502,6 +503,7 @@ public:
             CREATE TABLE IF NOT EXISTS permissions_history (
                 history_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
+                dashboard_access BOOLEAN DEFAULT FALSE,
                 product_dashboard BOOLEAN DEFAULT FALSE,
                 add_product BOOLEAN DEFAULT FALSE,
                 update_products BOOLEAN DEFAULT FALSE,
