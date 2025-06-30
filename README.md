@@ -1,74 +1,126 @@
 
 ---
+<p align="center">
+  <img src="https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/main/preview/ims_banner.png" alt="IMS Banner" />
+</p>
 
-# 🏪 Inventory Management System (IMS)  
+# 🏪 Inventory Management System (IMS)
 
-**Version:** v1.0.1.1 Beta  
-**Author:** [Arshc0der](https://github.com/arshc0der)  
-**Status:** 🚧 Beta Release (Not Production Ready)  
+> A modern, secure, and modular Inventory Management System built using Qt C++.
 
-## 📌 Overview  
-IMS is a **powerful and secure** inventory management system designed to simplify stock tracking, sales, and order management for businesses. Built with **Qt C++**, it provides a user-friendly interface and advanced security features like **SHA-256 credential verification** to ensure data integrity.  
+<p align="left">
+  <img src="https://img.shields.io/badge/status-Beta-yellow.svg" alt="Status Badge"/>
+  <img src="https://img.shields.io/github/license/arshc0der/Inventory-Management-System?color=green" alt="License Badge"/>
+  <img src="https://img.shields.io/badge/platform-Windows-blue.svg" alt="Platform Badge"/>
+  <img src="https://img.shields.io/badge/language-C++-00599C.svg" alt="Language Badge"/>
+  <img src="https://img.shields.io/badge/framework-Qt%206-41cd52.svg" alt="Qt Badge"/>
+  <img src="https://img.shields.io/badge/security-SHA--256-red.svg" alt="Security Badge"/>
+  <img src="https://img.shields.io/badge/open--source-yes-brightgreen.svg" alt="Open Source Badge"/>
+  <img src="https://img.shields.io/badge/contributions-welcome-orange.svg" alt="Collaboration Badge"/>
+  <img src="https://img.shields.io/github/stars/arshc0der/Inventory-Management-System?style=social" alt="Stars Badge"/>
+  <img src="https://img.shields.io/github/forks/arshc0der/Inventory-Management-System?style=social" alt="Forks Badge"/>
+  <img src="https://img.shields.io/github/views/arshc0der/Inventory-Management-System?style=social" alt="Views Badge"/>  
+</p>
 
-## ✨ Features  
-### 🖥 Main Modules  
-✅ **Dashboard** – A centralized view of inventory status and system activities.  
-✅ **Products Management** – Add, update, delete, and track stock levels.  
-✅ **Sales & Orders** – Monitor sales, process orders, and manage transactions.  
-✅ **Stock Adjustment** – Modify stock levels due to damage, returns, or discrepancies.  
-✅ **Notifications & Activity Tracking** – Get real-time updates on system changes.  
-✅ **Promotions & Discounts** – Manage promotional offers for products.  
-✅ **User Management** – Add and manage users with role-based permissions.  
-✅ **Settings & Security** – Configure system preferences and **SHA-256 authentication**.  
+---
 
-### 🆕 Additional Enhancements  
-🔒 **Improved Security** – Secure authentication using **SHA-256 hashing**.  
+## 📌 Overview
 
-## 🖼 Screenshots  
-*(Add your screenshots here, or replace the placeholders below)*  
+IMS is a **powerful** and **secure** desktop inventory management system tailored for small-to-medium businesses. It simplifies stock tracking, order processing, sales, and employee roles — all via a **clean Qt C++ GUI**.
 
-![Sigin](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/1.png)  
-*Sigin view showcasing.*  
-![Register](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/2.png)  
-*Register view showcasing.*  
-![Dashboard](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/3.png)  
-*Dashboard view showcasing.*  
-![Products](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/4.png)  
-*Products view showcasing.* 
-![Add Products](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/5.png)  
-*Add Products view showcasing.*  
-![Update Products](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/6.png)  
-*Update Products view showcasing.* 
-![Delete Products](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/7.png)  
-*Delete Products view showcasing.*  
-![Add Employee](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/8.png)  
-*Add Employee view showcasing.* 
-![Notification](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/9.png)  
-*Notification view showcasing.*  
+---
 
-## 🛠 Installation  
-### 🔹 Windows Installation 
-1️⃣ **Download** the latest `IMS_Setup.exe` from [Releases](https://github.com/arshc0der/Inventory-Management-System/releases).  
-2️⃣ **Run the installer** and follow on-screen instructions.  
-3️⃣ **Launch IMS** from the Start menu or Desktop shortcut.  
+## ✨ Features
 
-### 🔹 Manual Build (For Developers)  
-```sh
+### 🖥 Core Modules
+
+* ✅ **Dashboard** – Centralized inventory overview
+* ✅ **Product Management** – Add, update, delete & track products
+* ✅ **Sales & Orders** – Process transactions and manage customers
+* ✅ **Stock Adjustments** – Record damage, returns, and stock changes
+* ✅ **User Management** – Role-based permissions & user creation
+* ✅ **Promotions** – Manage discounts and offers
+* ✅ **Activity Logs & Notifications** – Stay updated in real-time
+* ✅ **Secure Login** – SHA-256 password hashing
+
+---
+
+## 🛡️ Tech Stack
+
+* **Language:** C++
+* **Framework:** Qt 6 (Widgets)
+* **Database:** SQLite
+* **Security:** SHA-256 Authentication
+* **Platform:** Windows
+
+---
+
+## 🖼️ UI Previews
+
+| Screen         | Preview                                                                                                                |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Sign In        | ![Sign In](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/1.png)      |
+| Register       | ![Register](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/2.png)     |
+| Dashboard      | ![Dashboard](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/3.png)    |
+| Products       | ![Products](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/4.png)     |
+| Add Product    | ![Add](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/5.png)          |
+| Update Product | ![Update](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/6.png)       |
+| Delete Product | ![Delete](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/7.png)       |
+| Add Employee   | ![Add Employee](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/8.png) |
+| Notifications  | ![Notification](https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/refs/heads/main/preview/9.png) |
+
+---
+
+## 🛠 Installation
+
+### 🔹 Windows (Recommended)
+
+1. 📦 Download `IMS_Setup.exe` from the [Releases Page](https://github.com/arshc0der/Inventory-Management-System/releases)
+2. 🚀 Run the installer
+3. 🎉 Launch from desktop/start menu
+
+### 🔹 Developer Setup (Manual Build)
+
+```bash
 git clone https://github.com/arshc0der/Inventory-Management-System.git
 cd Inventory-Management-System
 ```
-📌 Ensure **Qt6** and necessary dependencies are installed before building the project.  
 
-## 🔍 Known Issues  
-⚠️ This **Beta version is not production-ready**. Some features might be unstable.  
-⚠️ If you encounter issues, please **report them** in [Issues](https://github.com/arshc0der/Inventory-Management-System/issues).  
-
-## 💡 Contributing  
-Want to contribute? Feel free to **fork the repo**, submit pull requests, or suggest improvements!  
+> 📌 Requires **Qt 6** and compiler for C++ (e.g., MSVC or MinGW)
 
 ---
 
-🚀 **Stay updated with upcoming releases!**  
-📌 **Follow @codebyarsh on Instagram** for more updates!  
+## 🚧 Known Issues
+
+* ⚠️ This is a **Beta release** – expect occasional bugs
+* 🛠️ Under active development
+* 🐛 Found something? Submit to [GitHub Issues](https://github.com/arshc0der/Inventory-Management-System/issues)
 
 ---
+
+## 🙌 Contributing
+
+Contributions are welcome! Here's how:
+
+* 🍴 Fork the repository
+* 🛠 Make your changes
+* 📬 Submit a pull request
+* ⭐ Star the repo to support the project
+
+---
+
+## 📢 Stay Connected
+
+* 💻 Follow **[@arshc0der](https://github.com/arshc0der)** on Github
+* 📬 Get updates on new features & releases
+* 💬 Share feedback via Issues or Discussions
+
+---
+
+## 📜 License
+
+Licensed under the [MIT License](LICENSE).
+© 2025 [Arshc0der](https://github.com/arshc0der)
+
+---
+
