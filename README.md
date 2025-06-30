@@ -18,8 +18,7 @@
   <img src="https://img.shields.io/badge/open--source-yes-brightgreen.svg" alt="Open Source Badge"/>
   <img src="https://img.shields.io/badge/contributions-welcome-orange.svg" alt="Collaboration Badge"/>
   <img src="https://img.shields.io/github/stars/arshc0der/Inventory-Management-System?style=social" alt="Stars Badge"/>
-  <img src="https://img.shields.io/github/forks/arshc0der/Inventory-Management-System?style=social" alt="Forks Badge"/>
-  <img src="https://img.shields.io/github/views/arshc0der/Inventory-Management-System?style=social" alt="Views Badge"/>  
+  <img src="https://img.shields.io/github/forks/arshc0der/Inventory-Management-System?style=social" alt="Forks Badge"/>  
 </p>
 
 ---
