@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/github/forks/arshc0der/Inventory-Management-System?style=social" alt="Forks Badge"/>  
 </p>
 
----
+[![Last Commit](https://img.shields.io/github/last-commit/arshc0der/Inventory-Management-System)](https://github.com/arshc0der/Inventory-Management-System/commits/main)
 
 ## 📌 Overview
 
