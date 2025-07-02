@@ -1,8 +1,5 @@
 
 ---
-<p align="center">
-  <img src="https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/main/preview/ims_banner.png" alt="IMS Banner" />
-</p>
 
 # 🏪 Inventory Management System (IMS)
 
@@ -22,6 +19,19 @@
 </p>
 
 [![Last Commit](https://img.shields.io/github/last-commit/arshc0der/Inventory-Management-System)](https://github.com/arshc0der/Inventory-Management-System/commits/main)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/arshc0der/Inventory-Management-System/main/preview/ims_banner.png" alt="IMS Banner" />
+</p>
+
+## 📥 **Download Stable Version**
+
+**For the most secure and verified download experience, please use the official Microsoft Store.**
+
+<!-- Microsoft Store Badge for Download -->
+<a href="https://apps.microsoft.com/detail/9p0jjx40lsk5?referrer=appbadge&mode=direct">
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
+</a>
 
 ## 📌 Overview
 
