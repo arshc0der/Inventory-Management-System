@@ -1,3 +1,4 @@
+#include "ims_theme.h"
 #include "orders_trends.h"
 #include "ui_orders_trends.h"
 #include <QtCharts/QChartView>
@@ -67,6 +68,7 @@ Orders_Trends::Orders_Trends(QWidget *parent)
     chart->setAxisY(axisY, lineSeries);
 
     // Add the chart to a ChartView
+    ThemeManager::styleChart(chart);   // theme colours + animation
     QChartView *chartView = new QChartView(chart, this);
     chartView->setRenderHint(QPainter::Antialiasing);
 

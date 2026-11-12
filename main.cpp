@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "DatabaseManager.h"  // Singleton database connection
 #include "DatabaseSchema.h"    // Database schema management
+#include "ims_theme.h"         // design system (themes, animations)
 
 #include <QApplication>
 #include <QMessageBox>
@@ -14,10 +15,15 @@
 #include <QSplashScreen>
 #include <QThread>
 #include <QPixmap>
+#include <QEventLoop>
+#include <QTimer>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    // Enterprise look & feel: Carbon-style theme, fonts, animations
+    ThemeManager::instance().install();
 
     // Create and show the splash screen
     QPixmap pixmap(":/resources/splash_screen_images/splash_image.png");  // image path
@@ -76,7 +82,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    QThread::sleep(2);  // Simulate some initialization delay (e.g., 2 seconds)
+    // Short splash delay that keeps the event loop (and animations) alive,
+    // instead of freezing the UI thread with QThread::sleep().
+    QEventLoop splashWait;
+    QTimer::singleShot(900, &splashWait, &QEventLoop::quit);
+    splashWait.exec();
     // Now that everything is ready, close the splash screen
     splash->close();
 

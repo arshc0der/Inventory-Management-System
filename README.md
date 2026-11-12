@@ -54,6 +54,14 @@ IMS is a **powerful** and **secure** desktop inventory management system tailore
 
 ---
 
+## 🎨 UI Upgrade (Enterprise Design Layer)
+
+IBM Carbon-inspired light/dark themes, page transitions, animated KPIs, a **Ctrl+K command palette**,
+an **Inventory Explorer** (search / filter / sort / CSV export) and toast notifications.
+See [UI_UPGRADE.md](UI_UPGRADE.md) for details.
+
+---
+
 ## 🛡️ Tech Stack
 
 * **Language:** C++

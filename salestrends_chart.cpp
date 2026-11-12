@@ -1,3 +1,4 @@
+#include "ims_theme.h"
 #include "salestrends_chart.h"
 #include "ui_salestrends_chart.h"
 #include <QtCharts/QChartView>
@@ -68,6 +69,7 @@ SalesTrends_chart::SalesTrends_chart(QWidget *parent)
     chart->setAxisY(axisY, lineSeries);
 
     // Add the chart to a ChartView
+    ThemeManager::styleChart(chart);   // theme colours + animation
     QChartView *chartView = new QChartView(chart, this);
     chartView->setRenderHint(QPainter::Antialiasing);
 

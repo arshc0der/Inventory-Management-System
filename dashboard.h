@@ -28,6 +28,10 @@ namespace Ui {
 class DashBoard;
 }
 
+class InventoryExplorer;
+class QPushButton;
+class QLabel;
+
 class DashBoard : public QMainWindow
 {
     Q_OBJECT
@@ -119,6 +123,15 @@ private:
     //check admin
     check_Admin *check_Admin_Dialog;
     Reset_Password_Dialog *Reset_Dialog;
+
+    // --- modern UI layer (see ims_*.cpp) ---
+    void setupEnhancements();
+    void setActiveNav(QPushButton *active);
+    void showCommandPalette();
+    void restyleCharts();
+    InventoryExplorer *explorer = nullptr;
+    QPushButton *explorer_btn = nullptr;
+    QLabel *clock_label = nullptr;
 
     //charts
     void Sales_Trends_loader();

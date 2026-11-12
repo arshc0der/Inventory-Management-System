@@ -16,6 +16,22 @@
 #include <orders_trends.h>
 #include <QVariant>
 #include <QDebug>
+#include "ims_theme.h"
+#include "ims_fx.h"
+#include "ims_toast.h"
+#include "ims_palette.h"
+#include "ims_explorer.h"
+#include <QShortcut>
+#include <QVBoxLayout>
+#include <QIcon>
+#include <QKeySequence>
+#include <QTimer>
+#include <QDateTime>
+#include <QLabel>
+#include <QPushButton>
+#include <QStatusBar>
+#include <QStyle>
+#include <QtCharts/QChartView>
 
 DashBoard::DashBoard(QWidget *parent)
     : QMainWindow(parent)
@@ -185,6 +201,9 @@ DashBoard::DashBoard(QWidget *parent)
         }
 
     }
+
+    // modern UI layer: theme, animations, command palette, explorer, status bar
+    setupEnhancements();
 }
 
 DashBoard::~DashBoard()
@@ -227,76 +246,7 @@ void DashBoard::closeEvent(QCloseEvent *event)
 void DashBoard::on_dashboard_btn_clicked()
 {
     if(GlobalFunctions::is_admin() || GlobalFunctions::hasPermission("dashboard_access")){
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->product_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->orders_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->notification_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->users_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
-        ui->settings_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->activity_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
+        setActiveNav(ui->dashboard_btn);
         ui->stackedWidget->setCurrentIndex(0);
     }else {
         // Deny access
@@ -308,76 +258,7 @@ void DashBoard::on_product_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("product_dashboard")) {
         // Allow the user to add a product
-        ui->product_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->orders_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->notification_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->users_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
-        ui->settings_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->activity_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
+        setActiveNav(ui->product_btn);
         ui->stackedWidget->setCurrentIndex(1);
     } else {
         // Deny access
@@ -389,76 +270,7 @@ void DashBoard::on_supplier_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("sales_dashboard")) {
         // Allow the user to add a product
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->product_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->orders_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->notification_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->users_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
-        ui->settings_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->activity_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
+        setActiveNav(ui->supplier_btn);
         ui->stackedWidget->setCurrentIndex(2);
     } else {
         // Deny access
@@ -469,77 +281,8 @@ void DashBoard::on_supplier_btn_clicked()
 void DashBoard::on_notification_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("notification_dashboard")) {
-        ui->notification_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->product_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->orders_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->users_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
-        ui->settings_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->activity_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
         // Set the current widget to the notifications section (index 4)
+        setActiveNav(ui->notification_btn);
         ui->stackedWidget->setCurrentIndex(4);
     } else {
         // Deny access
@@ -551,77 +294,8 @@ void DashBoard::on_notification_btn_clicked()
 void DashBoard::on_users_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("user_dashboard")) {
-        ui->users_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->product_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->orders_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->notification_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->settings_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->activity_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
         // Set the current widget to the uers section (index 6)
+        setActiveNav(ui->users_btn);
         ui->stackedWidget->setCurrentIndex(6);
     } else {
         // Deny access
@@ -633,76 +307,7 @@ void DashBoard::on_users_btn_clicked()
 void DashBoard::on_settings_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("settings_dashboard")) {
-        ui->settings_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->product_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->orders_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->notification_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->users_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
-        ui->activity_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
+        setActiveNav(ui->settings_btn);
         ui->stackedWidget->setCurrentIndex(9);
     } else {
         // Deny access
@@ -713,77 +318,8 @@ void DashBoard::on_settings_btn_clicked()
 void DashBoard::on_orders_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("orders_dashboard")) {
-        ui->orders_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->settings_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->product_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->notification_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->users_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
-        ui->activity_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
         // Set the current widget to the orders section (index 3)
+        setActiveNav(ui->orders_btn);
         ui->stackedWidget->setCurrentIndex(3);
     } else {
         // Deny access
@@ -794,77 +330,8 @@ void DashBoard::on_orders_btn_clicked()
 void DashBoard::on_activity_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("activity_dashboard")) {
-        ui->activity_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->orders_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->settings_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->product_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->notification_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->users_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
         // Set the current widget to the activity section (index 5)
+        setActiveNav(ui->activity_btn);
         ui->stackedWidget->setCurrentIndex(5);
     } else {
         // Deny access
@@ -875,78 +342,8 @@ void DashBoard::on_activity_btn_clicked()
 void DashBoard::on_promotion_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("promotion_dashboard")) {
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->activity_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->orders_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->settings_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->product_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->notification_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->users_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
-
         // Set the current widget to the promotion section (index 7)
+        setActiveNav(ui->promotion_btn);
         ui->stackedWidget->setCurrentIndex(7);
     } else {
         // Deny access
@@ -956,77 +353,8 @@ void DashBoard::on_promotion_btn_clicked()
 void DashBoard::on_adjust_stock_btn_clicked()
 {
     if (GlobalFunctions::hasPermission("adjustment_Stock")) {
-        ui->adjust_stock_btn->setStyleSheet(
-            "QPushButton {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/adjust_stock-blue.svg);"
-            "} "
-            );
-
-        ui->promotion_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/promotion-blue.svg);"
-            "} "
-            );
-
-        ui->activity_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/activity-blue.svg);"
-            "} "
-            );
-
-        ui->orders_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/orders-blue.svg);"
-            "} "
-            );
-
-        ui->settings_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/settings-blue.svg);"
-            "} "
-            );
-
-        ui->supplier_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/supplier-blue.svg);"
-            "} "
-            );
-
-        ui->product_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/product-blue.svg);"
-            "} "
-            );
-
-        ui->dashboard_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/dashboard-blue.svg);"
-            "} "
-            );
-
-        ui->notification_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/notification-blue.svg);"
-            "} "
-            );
-
-        ui->users_btn->setStyleSheet(
-            "QPushButton:hover {"
-            "color: rgb(74, 144, 226);"
-            "icon: url(:/resources/dashboard-icons/user-blue.svg);"
-            "} "
-            );
-
         // Set the current widget to the Adjust Stock section (index 8)
+        setActiveNav(ui->adjust_stock_btn);
         ui->stackedWidget->setCurrentIndex(8);
     } else {
         // Deny access
@@ -2242,3 +1570,182 @@ void DashBoard::loadDefaultNotifications()
     }
 }
 
+
+
+// ===========================================================================
+// Modern UI layer (theme, animation, command palette, explorer, status bar)
+// ===========================================================================
+
+void DashBoard::setupEnhancements()
+{
+    // ---- page transitions + KPI count-up ---------------------------------
+    Fx::installPageTransitions(ui->stackedWidget);
+
+    // ---- Inventory Explorer page + sidebar entry -------------------------
+    explorer = new InventoryExplorer(this);
+    const int explorerIndex = ui->stackedWidget->addWidget(explorer);
+
+    QWidget *sidebar = ui->product_btn->parentWidget();
+    explorer_btn = new QPushButton(tr("Inventory"), sidebar);
+    explorer_btn->setObjectName("explorer_btn");
+    explorer_btn->setIcon(QIcon(":/resources/product-icons/advance_view.svg"));
+    explorer_btn->setFont(ui->product_btn->font());
+    explorer_btn->setSizePolicy(ui->product_btn->sizePolicy());
+    explorer_btn->setMinimumSize(ui->product_btn->minimumSize());
+    explorer_btn->setMaximumSize(ui->product_btn->maximumSize());
+    explorer_btn->setIconSize(ui->product_btn->iconSize());
+
+    if (auto *vbox = qobject_cast<QVBoxLayout *>(sidebar->layout())) {
+        const int at = vbox->indexOf(ui->product_btn);
+        vbox->insertWidget(at >= 0 ? at + 1 : vbox->count(), explorer_btn);
+    }
+
+    connect(explorer_btn, &QPushButton::clicked, this, [this, explorerIndex]() {
+        if (GlobalFunctions::is_admin() || GlobalFunctions::hasPermission("product_dashboard")) {
+            explorer->refresh();
+            setActiveNav(explorer_btn);
+            ui->stackedWidget->setCurrentIndex(explorerIndex);
+        } else {
+            Toast::notify(this, tr("You do not have permission to open the Inventory Explorer."),
+                          Toast::Warning);
+        }
+    });
+
+    // ---- status bar: user, shortcuts, clock, theme switch ----------------
+    QStatusBar *sb = statusBar();
+    sb->setSizeGripEnabled(false);
+
+    auto *who = new QLabel(QString("   %1   \u00B7   %2")
+                               .arg(GlobalFunctions::get_username(),
+                                    GlobalFunctions::is_admin() ? tr("Administrator") : tr("Employee")),
+                           sb);
+    sb->addWidget(who);
+
+    auto *hint = new QLabel(tr("Ctrl+K  Command palette      Ctrl+T  Toggle theme"), sb);
+    hint->setProperty("ims_managed", true);
+    sb->addWidget(hint);
+
+    clock_label = new QLabel(sb);
+    clock_label->setProperty("ims_managed", true);   // keep digits out of the KPI styling
+    sb->addPermanentWidget(clock_label);
+    auto *clock = new QTimer(this);
+    auto tick = [this]() {
+        clock_label->setText(QDateTime::currentDateTime().toString("ddd, dd MMM yyyy   hh:mm:ss") + "   ");
+    };
+    connect(clock, &QTimer::timeout, this, tick);
+    tick();
+    clock->start(1000);
+
+    auto *themeBtn = new QPushButton(sb);
+    themeBtn->setProperty("role", "statusbtn");
+    themeBtn->setCursor(Qt::PointingHandCursor);
+    themeBtn->setFlat(true);
+    auto updateThemeBtn = [themeBtn]() {
+        themeBtn->setText(ThemeManager::instance().isDark() ? QString::fromUtf8("\u2600  Light mode")
+                                                            : QString::fromUtf8("\u263E  Dark mode"));
+    };
+    updateThemeBtn();
+    sb->addPermanentWidget(themeBtn);
+    connect(themeBtn, &QPushButton::clicked, this, []() { ThemeManager::instance().toggle(); });
+    connect(&ThemeManager::instance(), &ThemeManager::themeChanged, this,
+            [this, updateThemeBtn]() {
+                updateThemeBtn();
+                restyleCharts();
+            });
+
+    // ---- keyboard shortcuts ----------------------------------------------
+    auto *paletteKey = new QShortcut(QKeySequence("Ctrl+K"), this);
+    connect(paletteKey, &QShortcut::activated, this, [this]() { showCommandPalette(); });
+    auto *themeKey = new QShortcut(QKeySequence("Ctrl+T"), this);
+    connect(themeKey, &QShortcut::activated, this, []() { ThemeManager::instance().toggle(); });
+
+    // ---- initial sidebar highlight + first count-up ----------------------
+    QPushButton *start = nullptr;
+    switch (ui->stackedWidget->currentIndex()) {
+    case 0: start = ui->dashboard_btn;    break;
+    case 1: start = ui->product_btn;      break;
+    case 2: start = ui->supplier_btn;     break;
+    case 3: start = ui->orders_btn;       break;
+    case 4: start = ui->notification_btn; break;
+    case 5: start = ui->activity_btn;     break;
+    case 6: start = ui->users_btn;        break;
+    case 7: start = ui->promotion_btn;    break;
+    case 8: start = ui->adjust_stock_btn; break;
+    case 9: start = ui->settings_btn;     break;
+    default: break;
+    }
+    setActiveNav(start);
+
+    restyleCharts();
+
+    // KPI roles are assigned when the window is first shown, so wait a beat.
+    QTimer::singleShot(250, this, [this]() {
+        Fx::countUpAll(ui->stackedWidget->currentWidget());
+    });
+}
+
+void DashBoard::setActiveNav(QPushButton *active)
+{
+    const QList<QPushButton *> navs = {
+        ui->dashboard_btn, ui->product_btn, ui->supplier_btn, ui->orders_btn,
+        ui->adjust_stock_btn, ui->notification_btn, ui->activity_btn,
+        ui->promotion_btn, ui->users_btn, ui->settings_btn, explorer_btn
+    };
+    for (QPushButton *b : navs) {
+        if (!b)
+            continue;
+        const bool on = (b == active);
+        b->setProperty("active", on);
+        const QIcon icon = b->property(on ? "ims_icon_active" : "ims_icon_base").value<QIcon>();
+        if (!icon.isNull())
+            b->setIcon(icon);
+        ThemeManager::repolish(b);
+    }
+}
+
+void DashBoard::restyleCharts()
+{
+    const QList<QChartView *> views = findChildren<QChartView *>();
+    for (QChartView *v : views)
+        ThemeManager::styleChart(v->chart());
+}
+
+void DashBoard::showCommandPalette()
+{
+    QList<CommandPalette::Command> cmds;
+
+    auto go = [&cmds](const QString &title, QPushButton *b) {
+        cmds.append(CommandPalette::Command{title, QStringLiteral("Navigate"), [b]() { b->click(); }});
+    };
+    go("Go to Dashboard",              ui->dashboard_btn);
+    go("Go to Products",               ui->product_btn);
+    go("Go to Inventory Explorer",     explorer_btn);
+    go("Go to Suppliers & Sales",      ui->supplier_btn);
+    go("Go to Orders",                 ui->orders_btn);
+    go("Go to Adjust Stock",           ui->adjust_stock_btn);
+    go("Go to Notifications",          ui->notification_btn);
+    go("Go to Activity",               ui->activity_btn);
+    go("Go to Promotions",             ui->promotion_btn);
+    go("Go to Users",                  ui->users_btn);
+    go("Go to Settings",               ui->settings_btn);
+
+    cmds.append(CommandPalette::Command{"Search inventory", "Action", [this]() {
+                     explorer_btn->click();
+                     explorer->focusSearch();
+                 }});
+    cmds.append(CommandPalette::Command{"Export inventory to CSV", "Action", [this]() {
+                     explorer_btn->click();
+                     explorer->exportCsv();
+                 }});
+    cmds.append(CommandPalette::Command{"Add product",          "Action", [this]() { on_add_product_btn_clicked(); }});
+    cmds.append(CommandPalette::Command{"Add sale",             "Action", [this]() { on_add_sales_btn_clicked(); }});
+    cmds.append(CommandPalette::Command{"Add order",            "Action", [this]() { on_addorders_btn_clicked(); }});
+    cmds.append(CommandPalette::Command{"Add promotion",        "Action", [this]() { on_add_promotion_btn_clicked(); }});
+    cmds.append(CommandPalette::Command{"Add stock adjustment", "Action", [this]() { on_add_adjustments_btn_clicked(); }});
+    cmds.append(CommandPalette::Command{ThemeManager::instance().isDark() ? "Switch to light theme" : "Switch to dark theme",
+                 "Appearance", []() { ThemeManager::instance().toggle(); }});
+    cmds.append(CommandPalette::Command{"Quit IMS", "Application", [this]() { close(); }});
+
+    auto *palette = new CommandPalette(this, cmds);
+    palette->open();
+}

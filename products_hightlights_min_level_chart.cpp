@@ -1,3 +1,4 @@
+#include "ims_theme.h"
 #include "products_hightlights_min_level_chart.h"
 #include "ui_products_hightlights_min_level_chart.h"
 #include <QtCharts/QChartView>
@@ -74,6 +75,7 @@ Products_Hightlights_Min_Level_Chart::Products_Hightlights_Min_Level_Chart(QWidg
     chart->setAxisY(axisY, barSeries);
 
     // Add the chart to a ChartView
+    ThemeManager::styleChart(chart);   // theme colours + animation
     QChartView *chartView = new QChartView(chart, this);
     chartView->setRenderHint(QPainter::Antialiasing);
 

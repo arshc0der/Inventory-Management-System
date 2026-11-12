@@ -9,6 +9,11 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ims_explorer.cpp \
+    ims_fx.cpp \
+    ims_palette.cpp \
+    ims_theme.cpp \
+    ims_toast.cpp \
     add_supplier.cpp \
     addadjustment.cpp \
     addemployee.cpp \
@@ -45,6 +50,11 @@ SOURCES += \
     updatesales.cpp
 
 HEADERS += \
+    ims_explorer.h \
+    ims_fx.h \
+    ims_palette.h \
+    ims_theme.h \
+    ims_toast.h \
     DatabaseManager.h \
     DatabaseSchema.h \
     add_supplier.h \

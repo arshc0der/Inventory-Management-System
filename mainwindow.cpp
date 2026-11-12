@@ -10,6 +10,8 @@
 #include <QThread>
 #include <globalfunctions.h>
 #include <QDateTime>
+#include "ims_toast.h"
+#include "ims_fx.h"
 //animation
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
@@ -115,7 +117,7 @@ void MainWindow::on_login_btn_clicked()
                 // Verify the password with the stored hash and salt
                 if (GlobalFunctions::verifyPassword(password, storedPasswordHash, storedPasswordSalt)) {
                     qDebug() << "Login successful!";
-                    QMessageBox::information(this, "Login Success", "You have successfully logged in.");
+                    // (no blocking "Login Success" dialog: the dashboard fades in instead)
 
                     // Reset failed login attempts on successful login
                     query.prepare("UPDATE users SET failed_login_attempts = 0, last_login = :last_login WHERE id = :id");
@@ -150,12 +152,12 @@ void MainWindow::on_login_btn_clicked()
 
                         QMessageBox::warning(this, "Account Locked", "Your account has been locked due to multiple failed login attempts. Please try again later.");
                     } else {
-                        QMessageBox::warning(this, "Login Failed", "Invalid password. Please try again.");
+                        { Toast::notify(this, "Invalid password. Please try again.", Toast::Error); Fx::shake(ui->login_btn); }
                     }
                 }
             } else {
                 qDebug() << "Invalid username.";
-                QMessageBox::warning(this, "Login Failed", "Invalid username.");
+                { Toast::notify(this, "Invalid username.", Toast::Error); Fx::shake(ui->login_btn); }
             }
         } else {
             qDebug() << "Login query error:" << query.lastError().text();
@@ -213,7 +215,7 @@ void MainWindow::on_login_btn_clicked()
                 // Verify the password with the stored hash and salt
                 if (GlobalFunctions::verifyPassword(password, storedPasswordHash, storedPasswordSalt)) {
                     qDebug() << "Login successful!";
-                    QMessageBox::information(this, "Login Success", "You have successfully logged in.");
+                    // (no blocking "Login Success" dialog: the dashboard fades in instead)
 
                     // Reset failed login attempts on successful login
                     query.prepare("UPDATE employees SET failed_login_attempts = 0, last_login = :last_login WHERE employee_id = :id");
@@ -248,12 +250,12 @@ void MainWindow::on_login_btn_clicked()
 
                         QMessageBox::warning(this, "Account Locked", "Your account has been locked due to multiple failed login attempts. Please try again later.");
                     } else {
-                        QMessageBox::warning(this, "Login Failed", "Invalid password. Please try again.");
+                        { Toast::notify(this, "Invalid password. Please try again.", Toast::Error); Fx::shake(ui->login_btn); }
                     }
                 }
             } else {
                 qDebug() << "Invalid email.";
-                QMessageBox::warning(this, "Login Failed", "Invalid email.");
+                { Toast::notify(this, "Invalid email.", Toast::Error); Fx::shake(ui->login_btn); }
             }
         } else {
             qDebug() << "Login query error:" << query.lastError().text();
