@@ -32,6 +32,7 @@ class ThemeManager : public QObject
     Q_OBJECT
 public:
     enum Mode { Light, Dark };
+    enum Density { Comfortable, Compact };
 
     static ThemeManager &instance();
 
@@ -42,6 +43,18 @@ public:
     bool isDark() const { return m_mode == Dark; }
     void setMode(Mode m);
     void toggle();
+
+    // ---- user-adjustable appearance (all persisted, all applied live) ----
+    QColor accentColor() const { return m_accent; }
+    void setAccentColor(const QColor &c);
+    Density density() const { return m_density; }
+    void setDensity(Density d);
+    int fontSize() const { return m_fontSize; }
+    void setFontSize(int points);
+    bool animationsEnabled() const { return m_animations; }
+    void setAnimationsEnabled(bool on);
+    int rowHeight() const { return m_density == Compact ? 30 : 40; }
+    void resetAppearance();
 
     // Colour token lookup, e.g. color("primary").
     QColor color(const QString &token) const;
@@ -57,6 +70,7 @@ public:
 
 signals:
     void themeChanged(bool dark);
+    void appearanceChanged();      // any appearance setting changed (theme, accent, density, font, motion)
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
@@ -71,7 +85,14 @@ private:
     void classifyFrames(QWidget *root);
     void classifyLabels(QWidget *root);
 
+    void saveSettings() const;
+    void applyFont();
+
     Mode m_mode = Light;
+    QColor m_accent = QColor("#0F62FE");
+    Density m_density = Comfortable;
+    int m_fontSize = 10;
+    bool m_animations = true;
     bool m_installed = false;
 };
 

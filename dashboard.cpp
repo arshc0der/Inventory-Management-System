@@ -21,6 +21,10 @@
 #include "ims_toast.h"
 #include "ims_palette.h"
 #include "ims_explorer.h"
+#include "ims_overview.h"
+#include "ims_datacenter.h"
+#include "ims_appearance.h"
+#include <QPropertyAnimation>
 #include <QShortcut>
 #include <QVBoxLayout>
 #include <QIcon>
@@ -1581,25 +1585,50 @@ void DashBoard::setupEnhancements()
     // ---- page transitions + KPI count-up ---------------------------------
     Fx::installPageTransitions(ui->stackedWidget);
 
-    // ---- Inventory Explorer page + sidebar entry -------------------------
-    explorer = new InventoryExplorer(this);
-    const int explorerIndex = ui->stackedWidget->addWidget(explorer);
-
+    // ---- extra pages + sidebar entries -----------------------------------
     QWidget *sidebar = ui->product_btn->parentWidget();
-    explorer_btn = new QPushButton(tr("Inventory"), sidebar);
-    explorer_btn->setObjectName("explorer_btn");
-    explorer_btn->setIcon(QIcon(":/resources/product-icons/advance_view.svg"));
-    explorer_btn->setFont(ui->product_btn->font());
-    explorer_btn->setSizePolicy(ui->product_btn->sizePolicy());
-    explorer_btn->setMinimumSize(ui->product_btn->minimumSize());
-    explorer_btn->setMaximumSize(ui->product_btn->maximumSize());
-    explorer_btn->setIconSize(ui->product_btn->iconSize());
+    auto *vbox = qobject_cast<QVBoxLayout *>(sidebar->layout());
 
-    if (auto *vbox = qobject_cast<QVBoxLayout *>(sidebar->layout())) {
-        const int at = vbox->indexOf(ui->product_btn);
+    auto makeNav = [this, sidebar](const QString &text, const QString &name, const QString &icon) {
+        auto *b = new QPushButton(text, sidebar);
+        b->setObjectName(name);
+        b->setIcon(QIcon(icon));
+        b->setFont(ui->product_btn->font());
+        b->setSizePolicy(ui->product_btn->sizePolicy());
+        b->setMinimumSize(ui->product_btn->minimumSize());
+        b->setMaximumSize(ui->product_btn->maximumSize());
+        b->setIconSize(ui->product_btn->iconSize());
+        return b;
+    };
+
+    overview   = new OverviewPage(this);
+    explorer   = new InventoryExplorer(this);
+    datacenter = new DataCenter(this);
+    const int overviewIndex = ui->stackedWidget->addWidget(overview);
+    const int explorerIndex = ui->stackedWidget->addWidget(explorer);
+    const int dataIndex     = ui->stackedWidget->addWidget(datacenter);
+
+    overview_btn   = makeNav(tr("Overview"),    "overview_btn",   ":/resources/dashboard-icons/team-grey.svg");
+    explorer_btn   = makeNav(tr("Inventory"),   "explorer_btn",   ":/resources/product-icons/advance_view.svg");
+    datacenter_btn = makeNav(tr("Data Center"), "datacenter_btn", ":/resources/product-icons/inventry-value.svg");
+
+    if (vbox) {
+        int at = vbox->indexOf(ui->dashboard_btn);
+        vbox->insertWidget(at >= 0 ? at : 0, overview_btn);
+        at = vbox->indexOf(ui->product_btn);
         vbox->insertWidget(at >= 0 ? at + 1 : vbox->count(), explorer_btn);
+        vbox->insertWidget(vbox->indexOf(explorer_btn) + 1, datacenter_btn);
     }
 
+    connect(overview_btn, &QPushButton::clicked, this, [this, overviewIndex]() {
+        if (GlobalFunctions::is_admin() || GlobalFunctions::hasPermission("dashboard_access")) {
+            overview->refresh();
+            setActiveNav(overview_btn);
+            ui->stackedWidget->setCurrentIndex(overviewIndex);
+        } else {
+            Toast::notify(this, tr("You do not have permission to open the Overview."), Toast::Warning);
+        }
+    });
     connect(explorer_btn, &QPushButton::clicked, this, [this, explorerIndex]() {
         if (GlobalFunctions::is_admin() || GlobalFunctions::hasPermission("product_dashboard")) {
             explorer->refresh();
@@ -1609,6 +1638,21 @@ void DashBoard::setupEnhancements()
             Toast::notify(this, tr("You do not have permission to open the Inventory Explorer."),
                           Toast::Warning);
         }
+    });
+    connect(datacenter_btn, &QPushButton::clicked, this, [this, dataIndex]() {
+        datacenter->refreshCurrent();
+        setActiveNav(datacenter_btn);
+        ui->stackedWidget->setCurrentIndex(dataIndex);
+    });
+
+    connect(overview, &OverviewPage::actionRequested, this, [this](const QString &key) {
+        if (key == "add_product")        { on_add_product_btn_clicked();     overview->refresh(); }
+        else if (key == "add_sale")      { on_add_sales_btn_clicked();       overview->refresh(); }
+        else if (key == "add_order")     { on_addorders_btn_clicked();       overview->refresh(); }
+        else if (key == "adjust_stock")  { on_add_adjustments_btn_clicked(); overview->refresh(); }
+        else if (key == "inventory")     { explorer_btn->click(); }
+        else if (key == "datacenter")    { datacenter_btn->click(); }
+        else if (key == "appearance")    { showAppearance(); }
     });
 
     // ---- status bar: user, shortcuts, clock, theme switch ----------------
@@ -1621,7 +1665,7 @@ void DashBoard::setupEnhancements()
                            sb);
     sb->addWidget(who);
 
-    auto *hint = new QLabel(tr("Ctrl+K  Command palette      Ctrl+T  Toggle theme"), sb);
+    auto *hint = new QLabel(tr("Ctrl+K  Commands     Ctrl+T  Theme     Ctrl+,  Appearance     Ctrl+B  Sidebar"), sb);
     hint->setProperty("ims_managed", true);
     sb->addWidget(hint);
 
@@ -1646,18 +1690,42 @@ void DashBoard::setupEnhancements()
     };
     updateThemeBtn();
     sb->addPermanentWidget(themeBtn);
+
+    auto *sideBtn = new QPushButton(QString::fromUtf8("\xE2\x98\xB0  Sidebar"), sb);
+    sideBtn->setProperty("role", "statusbtn");
+    sideBtn->setCursor(Qt::PointingHandCursor);
+    sideBtn->setFlat(true);
+    sb->addPermanentWidget(sideBtn);
+    connect(sideBtn, &QPushButton::clicked, this, [this]() { toggleSidebar(); });
+
+    auto *lookBtn = new QPushButton(tr("Appearance"), sb);
+    lookBtn->setProperty("role", "statusbtn");
+    lookBtn->setCursor(Qt::PointingHandCursor);
+    lookBtn->setFlat(true);
+    sb->addPermanentWidget(lookBtn);
+    connect(lookBtn, &QPushButton::clicked, this, [this]() { showAppearance(); });
     connect(themeBtn, &QPushButton::clicked, this, []() { ThemeManager::instance().toggle(); });
-    connect(&ThemeManager::instance(), &ThemeManager::themeChanged, this,
+    connect(&ThemeManager::instance(), &ThemeManager::appearanceChanged, this,
             [this, updateThemeBtn]() {
                 updateThemeBtn();
                 restyleCharts();
+                if (overview)
+                    overview->refresh();
             });
 
     // ---- keyboard shortcuts ----------------------------------------------
     auto *paletteKey = new QShortcut(QKeySequence("Ctrl+K"), this);
     connect(paletteKey, &QShortcut::activated, this, [this]() { showCommandPalette(); });
+    auto *lookKey = new QShortcut(QKeySequence("Ctrl+,"), this);
+    connect(lookKey, &QShortcut::activated, this, [this]() { showAppearance(); });
+    auto *sideKey = new QShortcut(QKeySequence("Ctrl+B"), this);
+    connect(sideKey, &QShortcut::activated, this, [this]() { toggleSidebar(); });
     auto *themeKey = new QShortcut(QKeySequence("Ctrl+T"), this);
     connect(themeKey, &QShortcut::activated, this, []() { ThemeManager::instance().toggle(); });
+
+    // ---- land on the Overview when the user may see it ---------------------
+    if (GlobalFunctions::is_admin() || GlobalFunctions::hasPermission("dashboard_access"))
+        ui->stackedWidget->setCurrentIndex(overviewIndex);
 
     // ---- initial sidebar highlight + first count-up ----------------------
     QPushButton *start = nullptr;
@@ -1672,7 +1740,10 @@ void DashBoard::setupEnhancements()
     case 7: start = ui->promotion_btn;    break;
     case 8: start = ui->adjust_stock_btn; break;
     case 9: start = ui->settings_btn;     break;
-    default: break;
+    default:
+        if (ui->stackedWidget->currentWidget() == overview)
+            start = overview_btn;
+        break;
     }
     setActiveNav(start);
 
@@ -1689,7 +1760,7 @@ void DashBoard::setActiveNav(QPushButton *active)
     const QList<QPushButton *> navs = {
         ui->dashboard_btn, ui->product_btn, ui->supplier_btn, ui->orders_btn,
         ui->adjust_stock_btn, ui->notification_btn, ui->activity_btn,
-        ui->promotion_btn, ui->users_btn, ui->settings_btn, explorer_btn
+        ui->promotion_btn, ui->users_btn, ui->settings_btn, overview_btn, explorer_btn, datacenter_btn
     };
     for (QPushButton *b : navs) {
         if (!b)
@@ -1717,9 +1788,11 @@ void DashBoard::showCommandPalette()
     auto go = [&cmds](const QString &title, QPushButton *b) {
         cmds.append(CommandPalette::Command{title, QStringLiteral("Navigate"), [b]() { b->click(); }});
     };
-    go("Go to Dashboard",              ui->dashboard_btn);
+    go("Go to Overview",               overview_btn);
+    go("Go to Dashboard (charts)",     ui->dashboard_btn);
     go("Go to Products",               ui->product_btn);
     go("Go to Inventory Explorer",     explorer_btn);
+    go("Go to Data Center",            datacenter_btn);
     go("Go to Suppliers & Sales",      ui->supplier_btn);
     go("Go to Orders",                 ui->orders_btn);
     go("Go to Adjust Stock",           ui->adjust_stock_btn);
@@ -1729,6 +1802,17 @@ void DashBoard::showCommandPalette()
     go("Go to Users",                  ui->users_btn);
     go("Go to Settings",               ui->settings_btn);
 
+    static const char *const dataSets[][2] = {
+        {"sales", "Sales"}, {"orders", "Orders"}, {"orderlines", "Order lines"}, {"suppliers", "Suppliers"},
+        {"customers", "Customers"}, {"employees", "Employees"}, {"promotions", "Promotions"},
+        {"adjustments", "Stock adjustments"}, {"notifications", "Notifications"}, {"audit", "Audit log"}};
+    for (const auto &ds : dataSets) {
+        const QString id = ds[0];
+        cmds.append(CommandPalette::Command{QString("Open %1 (advanced view)").arg(QString::fromLatin1(ds[1])), "Data Center",
+                                            [this, id]() { datacenter_btn->click(); datacenter->showDataset(id); }});
+    }
+    cmds.append(CommandPalette::Command{"Appearance & preferences", "Appearance", [this]() { showAppearance(); }});
+    cmds.append(CommandPalette::Command{"Toggle sidebar", "Appearance", [this]() { toggleSidebar(); }});
     cmds.append(CommandPalette::Command{"Search inventory", "Action", [this]() {
                      explorer_btn->click();
                      explorer->focusSearch();
@@ -1748,4 +1832,70 @@ void DashBoard::showCommandPalette()
 
     auto *palette = new CommandPalette(this, cmds);
     palette->open();
+}
+
+
+void DashBoard::showAppearance()
+{
+    AppearanceDialog dlg(this);
+    dlg.exec();
+}
+
+void DashBoard::toggleSidebar()
+{
+    QWidget *sidebar = ui->product_btn->parentWidget();
+    if (!sidebar)
+        return;
+
+    const QList<QPushButton *> navs = {
+        ui->dashboard_btn, ui->product_btn, ui->supplier_btn, ui->orders_btn,
+        ui->adjust_stock_btn, ui->notification_btn, ui->activity_btn,
+        ui->promotion_btn, ui->users_btn, ui->settings_btn, overview_btn, explorer_btn, datacenter_btn
+    };
+
+    if (!navCollapsed) {
+        navOrigWidth = sidebar->width();
+        navOrigMin = sidebar->minimumWidth();
+        navOrigMax = sidebar->maximumWidth();
+    }
+    navCollapsed = !navCollapsed;
+
+    for (QPushButton *b : navs) {
+        if (!b)
+            continue;
+        if (navCollapsed) {
+            if (!b->property("ims_text").isValid()) {
+                b->setProperty("ims_text", b->text());
+                b->setProperty("ims_minw", b->minimumWidth());
+            }
+            b->setText(QString());
+            b->setMinimumWidth(0);
+            b->setToolTip(b->property("ims_text").toString());
+        } else {
+            b->setText(b->property("ims_text").toString());
+            b->setMinimumWidth(b->property("ims_minw").toInt());
+            b->setToolTip(QString());
+        }
+    }
+
+    const int target = navCollapsed ? 76 : navOrigWidth;
+    sidebar->setMinimumWidth(0);
+
+    auto *a = new QPropertyAnimation(sidebar, "maximumWidth", sidebar);
+    a->setDuration(ThemeManager::instance().animationsEnabled() ? 220 : 0);
+    a->setStartValue(sidebar->width());
+    a->setEndValue(target);
+    a->setEasingCurve(QEasingCurve::OutCubic);
+    const bool collapsed = navCollapsed;
+    const int origMin = navOrigMin;
+    const int origMax = navOrigMax;
+    connect(a, &QPropertyAnimation::finished, sidebar, [sidebar, collapsed, origMin, origMax, target]() {
+        if (collapsed) {
+            sidebar->setMinimumWidth(target);
+        } else {
+            sidebar->setMinimumWidth(origMin);
+            sidebar->setMaximumWidth(origMax);
+        }
+    });
+    a->start(QAbstractAnimation::DeleteWhenStopped);
 }

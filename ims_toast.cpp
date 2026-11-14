@@ -86,7 +86,7 @@ void Toast::relayout(QWidget *window, Toast *fresh)
         y -= t->height();
         const QPoint target(window->width() - t->width() - 24, y);
 
-        if (t == fresh) {
+        if (t == fresh && ThemeManager::instance().animationsEnabled()) {
             t->move(target + QPoint(40, 0));
             auto *eff = new QGraphicsOpacityEffect(t);
             eff->setOpacity(0.0);
@@ -118,6 +118,15 @@ void Toast::relayout(QWidget *window, Toast *fresh)
 void Toast::dismiss()
 {
     QWidget *win = parentWidget();
+
+    if (!ThemeManager::instance().animationsEnabled()) {
+        activeToasts().removeAll(QPointer<Toast>(this));
+        hide();
+        deleteLater();
+        if (win)
+            relayout(win, nullptr);
+        return;
+    }
 
     auto *eff = new QGraphicsOpacityEffect(this);
     eff->setOpacity(1.0);

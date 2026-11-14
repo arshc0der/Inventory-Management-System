@@ -58,6 +58,12 @@ ThemeManager::ThemeManager() : QObject(nullptr)
     // (DatabaseManager derives the database path from them).
     QSettings s("IMS", "InventoryManagementSystem");
     m_mode = (s.value("ui/theme", "light").toString() == "dark") ? Dark : Light;
+    const QColor acc(s.value("ui/accent", "#0F62FE").toString());
+    if (acc.isValid())
+        m_accent = acc;
+    m_density = (s.value("ui/density", "comfortable").toString() == "compact") ? Compact : Comfortable;
+    m_fontSize = qBound(9, s.value("ui/fontSize", 10).toInt(), 15);
+    m_animations = s.value("ui/animations", true).toBool();
 }
 
 void ThemeManager::install()
@@ -68,11 +74,7 @@ void ThemeManager::install()
 
     qApp->setStyle("Fusion");   // predictable base for QSS on every platform
 
-    QFont f = qApp->font();
-    f.setFamilies({"IBM Plex Sans", "Segoe UI", "Inter", "Helvetica Neue", "Arial"});
-    f.setPointSize(10);
-    qApp->setFont(f);
-
+    applyFont();
     qApp->installEventFilter(this);
     rebuild();
 }
@@ -82,10 +84,83 @@ void ThemeManager::setMode(Mode m)
     if (m == m_mode)
         return;
     m_mode = m;
-    QSettings s("IMS", "InventoryManagementSystem");
-    s.setValue("ui/theme", m == Dark ? "dark" : "light");
+    saveSettings();
     rebuild();
     emit themeChanged(m == Dark);
+    emit appearanceChanged();
+}
+
+void ThemeManager::saveSettings() const
+{
+    QSettings s("IMS", "InventoryManagementSystem");
+    s.setValue("ui/theme", m_mode == Dark ? "dark" : "light");
+    s.setValue("ui/accent", m_accent.name());
+    s.setValue("ui/density", m_density == Compact ? "compact" : "comfortable");
+    s.setValue("ui/fontSize", m_fontSize);
+    s.setValue("ui/animations", m_animations);
+}
+
+void ThemeManager::applyFont()
+{
+    QFont f = qApp->font();
+    f.setFamilies({"IBM Plex Sans", "Segoe UI", "Inter", "Helvetica Neue", "Arial"});
+    f.setPointSize(m_fontSize);
+    qApp->setFont(f);
+}
+
+void ThemeManager::setAccentColor(const QColor &c)
+{
+    if (!c.isValid() || c == m_accent)
+        return;
+    m_accent = c;
+    saveSettings();
+    rebuild();
+    emit appearanceChanged();
+}
+
+void ThemeManager::setDensity(Density d)
+{
+    if (d == m_density)
+        return;
+    m_density = d;
+    saveSettings();
+    rebuild();
+    emit appearanceChanged();
+}
+
+void ThemeManager::setFontSize(int points)
+{
+    points = qBound(9, points, 15);
+    if (points == m_fontSize)
+        return;
+    m_fontSize = points;
+    saveSettings();
+    applyFont();
+    rebuild();
+    emit appearanceChanged();
+}
+
+void ThemeManager::setAnimationsEnabled(bool on)
+{
+    if (on == m_animations)
+        return;
+    m_animations = on;
+    saveSettings();
+    emit appearanceChanged();
+}
+
+void ThemeManager::resetAppearance()
+{
+    m_accent = QColor("#0F62FE");
+    m_density = Comfortable;
+    m_fontSize = 10;
+    m_animations = true;
+    m_mode = Light;
+    saveSettings();
+    applyFont();
+    rebuild();
+    emit themeChanged(false);
+    emit appearanceChanged();
 }
 
 void ThemeManager::toggle()
@@ -151,6 +226,31 @@ QMap<QString, QString> ThemeManager::tokens() const
         t["warn"] = "#F1C21B";         t["warnBg"] = "#3D3200";
         t["bad"] = "#FF8389";          t["badBg"] = "#4A1519";
     }
+
+    // ---- accent-derived tokens -------------------------------------------
+    auto blend = [](const QColor &a, const QColor &b, double k) {
+        return QColor(int(a.red() * (1 - k) + b.red() * k),
+                      int(a.green() * (1 - k) + b.green() * k),
+                      int(a.blue() * (1 - k) + b.blue() * k));
+    };
+    const QColor base = (m_mode == Dark) ? QColor("#262626") : QColor("#FFFFFF");
+    t["btnPrimary"]       = m_accent.name();
+    t["btnPrimaryHover"]  = m_accent.darker(115).name();
+    t["btnPrimaryActive"] = m_accent.darker(165).name();
+    t["accent"]           = (m_mode == Dark ? m_accent.lighter(145) : m_accent).name();
+    t["navActive"]        = blend(base, m_accent, m_mode == Dark ? 0.24 : 0.10).name();
+    t["selection"]        = blend(base, m_accent, m_mode == Dark ? 0.38 : 0.20).name();
+    t["heroStart"]        = m_accent.name();
+    t["heroEnd"]          = m_accent.darker(320).name();
+
+    // ---- density-derived paddings ----------------------------------------
+    const bool c = (m_density == Compact);
+    t["padBtn"]        = c ? "5px 14px"  : "9px 18px";
+    t["padBtnFocus"]   = c ? "3px 12px"  : "7px 16px";
+    t["padField"]      = c ? "4px 8px"   : "8px 10px";
+    t["padFieldFocus"] = c ? "3px 7px"   : "7px 9px";
+    t["padNav"]        = c ? "8px 14px"  : "11px 14px";
+    t["padTab"]        = c ? "6px 14px"  : "10px 18px";
     return t;
 }
 
@@ -182,12 +282,12 @@ QFrame[role="panel"]   { background: transparent; border: none; }
 QFrame[role="sidebar"] { background: @surface@; border: none; border-right: 1px solid @border@; border-radius: 0; }
 QFrame[role="field"]   { background: @field@; border: none; border-bottom: 1px solid @borderStrong@; border-radius: 0; }
 QFrame[role="pill"]    { background: @field@; border: 1px solid @border@; border-radius: 20px; }
-QFrame[role="hero"]    { background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #0F62FE, stop:1 #001D6C); border: none; border-radius: 0; }
+QFrame[role="hero"]    { background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 @heroStart@, stop:1 @heroEnd@); border: none; border-radius: 0; }
 QFrame[role="hero"] QLabel { color: #FFFFFF; background: transparent; }
 QFrame[role="field"] QLineEdit, QFrame[role="field"] QComboBox { background: transparent; border: none; }
 QFrame[role="field"] QLineEdit:focus { border: none; }
 
-QFrame[role="card"][accent="0"] { border-left: 4px solid #0F62FE; }
+QFrame[role="card"][accent="0"] { border-left: 4px solid @btnPrimary@; }
 QFrame[role="card"][accent="1"] { border-left: 4px solid #8A3FFC; }
 QFrame[role="card"][accent="2"] { border-left: 4px solid #009D9A; }
 QFrame[role="card"][accent="3"] { border-left: 4px solid #FF832B; }
@@ -198,10 +298,11 @@ QLabel[role="title"] { font-size: 22px; font-weight: 600; color: @text@; }
 QLabel[role="stat"]  { font-size: 26px; font-weight: 300; color: @text@; }
 
 /* ---------- buttons ---------- */
-QPushButton { background: @btnSecondary@; color: #FFFFFF; border: none; border-radius: 4px; padding: 9px 18px; font-weight: 500; }
+QPushButton { background: @btnSecondary@; color: #FFFFFF; border: none; border-radius: 4px; padding: @padBtn@; font-weight: 500; }
 QPushButton:hover   { background: @btnSecondaryHover@; }
 QPushButton:pressed { background: @btnSecondaryActive@; }
-QPushButton:focus   { outline: none; border: 2px solid @accent@; padding: 7px 16px; }
+QPushButton:focus   { outline: none; border: 2px solid @accent@; padding: @padBtnFocus@; }
+QPushButton:checked  { background: @btnPrimary@; }
 QPushButton:disabled { background: @disabledBg@; color: @disabledText@; }
 
 QPushButton[role="primary"]         { background: @btnPrimary@; }
@@ -219,9 +320,9 @@ QPushButton[role="ghost"]:focus     { border: 2px solid @accent@; padding: 4px 8
 QPushButton[role="statusbtn"]       { background: transparent; color: @shellText@; padding: 2px 10px; border-radius: 3px; }
 QPushButton[role="statusbtn"]:hover { background: #393939; color: #FFFFFF; }
 
-QPushButton[role="nav"] { background: transparent; color: @navText@; text-align: left; padding: 11px 14px; border: none; border-left: 3px solid transparent; border-radius: 0; font-weight: 400; }
+QPushButton[role="nav"] { background: transparent; color: @navText@; text-align: left; padding: @padNav@; border: none; border-left: 3px solid transparent; border-radius: 0; font-weight: 400; }
 QPushButton[role="nav"]:hover  { background: @navHover@; color: @text@; }
-QPushButton[role="nav"]:focus  { border: none; border-left: 3px solid transparent; padding: 11px 14px; }
+QPushButton[role="nav"]:focus  { border: none; border-left: 3px solid transparent; padding: @padNav@; }
 QPushButton[role="nav"][active="true"] { background: @navActive@; color: @accent@; border-left: 3px solid @accent@; font-weight: 600; }
 
 QPushButton#toggle_button_main_circle, QPushButton#toggle_button_admin_circle { background: @btnPrimary@; border-radius: 15px; padding: 0; }
@@ -229,10 +330,10 @@ QPushButton#toggle_button_main_circle, QPushButton#toggle_button_admin_circle { 
 /* ---------- inputs ---------- */
 QLineEdit, QComboBox, QSpinBox, QDoubleSpinBox, QDateEdit, QDateTimeEdit, QTimeEdit, QTextEdit, QPlainTextEdit {
     background: @field@; color: @text@; border: 1px solid transparent; border-bottom: 1px solid @borderStrong@;
-    border-radius: 0; padding: 8px 10px; min-height: 20px;
+    border-radius: 0; padding: @padField@; min-height: 20px;
     selection-background-color: @btnPrimary@; selection-color: #FFFFFF; }
 QLineEdit:focus, QComboBox:focus, QSpinBox:focus, QDoubleSpinBox:focus, QDateEdit:focus,
-QDateTimeEdit:focus, QTimeEdit:focus, QTextEdit:focus, QPlainTextEdit:focus { border: 2px solid @accent@; padding: 7px 9px; }
+QDateTimeEdit:focus, QTimeEdit:focus, QTextEdit:focus, QPlainTextEdit:focus { border: 2px solid @accent@; padding: @padFieldFocus@; }
 QLineEdit:disabled, QComboBox:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled { color: @disabledText@; background: @bg@; }
 QComboBox::drop-down { border: none; width: 28px; }
 QComboBox QAbstractItemView { background: @surface@; color: @text@; border: 1px solid @border@; outline: 0;
@@ -254,9 +355,14 @@ QTableView::item:selected, QListView::item:selected { background: @selection@; c
 QHeaderView::section { background: @headerBg@; color: @text@; padding: 10px 12px; border: none; border-right: 1px solid @surface@; font-weight: 600; }
 QTableCornerButton::section { background: @headerBg@; border: none; }
 
+/* ---------- slider ---------- */
+QSlider::groove:horizontal { height: 4px; background: @border@; border-radius: 2px; }
+QSlider::sub-page:horizontal { background: @btnPrimary@; border-radius: 2px; }
+QSlider::handle:horizontal { background: @btnPrimary@; width: 16px; height: 16px; margin: -6px 0; border-radius: 8px; }
+
 /* ---------- tabs / group / progress ---------- */
 QTabWidget::pane { border: none; border-top: 1px solid @border@; background: transparent; }
-QTabBar::tab { background: transparent; color: @text2@; padding: 10px 18px; border: none; border-bottom: 2px solid transparent; }
+QTabBar::tab { background: transparent; color: @text2@; padding: @padTab@; border: none; border-bottom: 2px solid transparent; }
 QTabBar::tab:hover { color: @text@; background: @navHover@; }
 QTabBar::tab:selected { color: @text@; border-bottom: 2px solid @accent@; font-weight: 600; }
 QGroupBox { border: 1px solid @border@; border-radius: 4px; margin-top: 14px; padding-top: 10px; color: @text@; }
@@ -375,6 +481,8 @@ void ThemeManager::classifyButtons(QWidget *root)
         {"users_btn",        ":/resources/dashboard-icons/user-blue.svg"},
         {"settings_btn",     ":/resources/dashboard-icons/settings-blue.svg"},
         {"explorer_btn",     ":/resources/product-icons/advance_view.svg"},
+        {"overview_btn",     ":/resources/dashboard-icons/team-blue.svg"},
+        {"datacenter_btn",   ":/resources/product-icons/inventry-value.svg"},
     };
 
     const QRegularExpression dangerRx("delete|remove|terminate|cancel order",
@@ -521,7 +629,7 @@ void ThemeManager::styleChart(QChart *chart)
     const QColor text2 = tm.color("text2");
     const QColor grid = tm.color("border");
     const QColor axisLine = tm.color("borderStrong");
-    const QColor primary = QColor("#0F62FE");
+    const QColor primary = tm.color("btnPrimary");
 
     chart->setBackgroundBrush(QBrush(Qt::transparent));
     chart->setBackgroundPen(Qt::NoPen);
@@ -534,7 +642,7 @@ void ThemeManager::styleChart(QChart *chart)
     chart->legend()->setLabelColor(text2);
     chart->legend()->setAlignment(Qt::AlignBottom);
 
-    chart->setAnimationOptions(QChart::SeriesAnimations);
+    chart->setAnimationOptions(tm.animationsEnabled() ? QChart::SeriesAnimations : QChart::NoAnimation);
     chart->setAnimationDuration(900);
     chart->setAnimationEasingCurve(QEasingCurve(QEasingCurve::OutCubic));
 

@@ -29,6 +29,8 @@ class DashBoard;
 }
 
 class InventoryExplorer;
+class OverviewPage;
+class DataCenter;
 class QPushButton;
 class QLabel;
 
@@ -129,6 +131,14 @@ private:
     void setActiveNav(QPushButton *active);
     void showCommandPalette();
     void restyleCharts();
+    void showAppearance();
+    void toggleSidebar();
+    OverviewPage *overview = nullptr;
+    DataCenter *datacenter = nullptr;
+    QPushButton *overview_btn = nullptr;
+    QPushButton *datacenter_btn = nullptr;
+    bool navCollapsed = false;
+    int navOrigWidth = 0, navOrigMin = 0, navOrigMax = 16777215;
     InventoryExplorer *explorer = nullptr;
     QPushButton *explorer_btn = nullptr;
     QLabel *clock_label = nullptr;

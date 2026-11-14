@@ -69,3 +69,64 @@ qmake IMS.pro && make      # or open IMS.pro in Qt Creator and press Run
 This layer was written without access to a Qt toolchain in the authoring environment,
 so it has not been compiled or run there. Expect to do a first build and fix any small
 compile or visual issues; see the list in the project hand-off notes.
+
+---
+
+# Round 2 - Advanced views, Appearance controls, demo database
+
+## New pages (sidebar)
+| Page | What it is |
+| --- | --- |
+| **Overview** (new landing page) | KPI cards (30-day revenue and sales, pending orders, stock needing attention, active promotions, stock value), 14-day revenue bars with hover tooltips, top products, stock alerts, recent activity, and quick-action buttons. |
+| **Inventory** | Products grid: search, category filter, low-stock toggle, status chips, suggested reorder quantity, CSV export. |
+| **Data Center** | The "advanced view" for every module. Ten data sets: Sales, Orders, Order lines, Suppliers, Customers, Employees, Promotions, Stock adjustments, Notifications, Audit log. |
+
+Every Data Center grid has: KPI strip, search across all columns, status filter, column chooser,
+click-to-sort, a **record-details panel** showing every field of the selected row, footer totals, and CSV export.
+Views are hidden behind the existing `advance_view_*` / dashboard permissions (a locked item shows a padlock).
+Employee pay columns are only shown to admins; passwords, bank and ID numbers are never queried.
+
+## Appearance & preferences (Ctrl+,)
+* Theme: Light / Dark
+* Accent colour: IBM Blue, Purple, Teal, Magenta, Orange, Green, Slate (buttons, links, charts, selection all follow)
+* Density: Comfortable / Compact (buttons, fields, tables, sidebar)
+* Text size: 9-15 pt
+* Motion: switch all animations and transitions off
+* Everything applies live and is remembered. "Reset to defaults" is one click.
+
+## Other controls
+* `Ctrl+B` or the status-bar button collapses the sidebar to an icon rail (tooltips show names).
+* The Ctrl+K palette now also opens any Data Center view ("Open Orders (advanced view)"), Appearance and the sidebar toggle.
+* The status bar has quick buttons for theme, sidebar and Appearance.
+
+## Demo / test database
+`docs/Tester/Testing_Database_File/i_m_s_demo.db` - 56 products across 7 categories (5 out of stock, 7 low),
+150 sales, 60 orders (31 completed / 20 pending / 9 cancelled), 129 order lines, 25 stock adjustments,
+8 suppliers, 15 customers, 12 employees with differing permissions, 6 promotions (active / upcoming / expired),
+21 notifications and 70 audit entries spread over the last 60 days.
+
+Install: close IMS, then copy the file to `%APPDATA%\IMS\i_m_s.db` (rename it to `i_m_s.db`, replacing the old one).
+
+| Role | Login | Password |
+| --- | --- | --- |
+| Admin | username `admin`, PIN `1234` | `Admin@123` |
+| Employee (manager, all permissions) | `priya@northwind.test` | `Emp@12345` |
+| Employee (inventory only) | `rahul@northwind.test` | `Emp@12345` |
+| Employee (sales/orders only) | `sneha@northwind.test` | `Emp@12345` |
+
+Regenerate it any time (fresh dates, same schema as the app) with:
+```
+python3 tools/generate_test_db.py [output.db]
+```
+
+## Fixes
+* `Qt::PointingHand` -> `Qt::PointingHandCursor` (compile error reported after round 1).
+
+## New files in round 2
+```
+ims_datagrid.h/.cpp     generic SQL-driven advanced grid + detail panel
+ims_datacenter.h/.cpp   Data Center hub, ten data sets, permission gating
+ims_overview.h/.cpp     Overview page + MiniBars chart
+ims_appearance.h/.cpp   Appearance & preferences dialog
+tools/generate_test_db.py   demo database generator
+```

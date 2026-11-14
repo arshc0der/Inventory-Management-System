@@ -1,4 +1,5 @@
 #include "ims_fx.h"
+#include "ims_theme.h"
 
 #include <QWidget>
 #include <QLabel>
@@ -44,6 +45,8 @@ protected:
 private:
     void animate(bool up)
     {
+    if (!ThemeManager::instance().animationsEnabled())
+        return;
         if (!m_fx || m_w->graphicsEffect() != m_fx) {
             m_fx = new QGraphicsDropShadowEffect(m_w);
             m_fx->setBlurRadius(0);
@@ -101,6 +104,8 @@ private:
 
 void pageTransition(QStackedWidget *sw, QWidget *page)
 {
+    if (!ThemeManager::instance().animationsEnabled())
+        return;
     Fx::fadeIn(page, 260);
 
     // Slide up slightly. Deferred so the stacked layout has placed the page.
@@ -126,6 +131,8 @@ namespace Fx {
 
 void fadeIn(QWidget *w, int ms)
 {
+    if (!ThemeManager::instance().animationsEnabled())
+        return;
     if (!w)
         return;
     auto *eff = new QGraphicsOpacityEffect(w);
@@ -146,6 +153,8 @@ void fadeIn(QWidget *w, int ms)
 
 void fadeInWindow(QWidget *w, int ms)
 {
+    if (!ThemeManager::instance().animationsEnabled())
+        return;
     if (!w)
         return;
     w->setWindowOpacity(0.0);
@@ -169,6 +178,8 @@ void installPageTransitions(QStackedWidget *sw)
 
 void countUp(QLabel *label, int ms)
 {
+    if (!ThemeManager::instance().animationsEnabled())
+        return;
     if (!label || label->property("ims_cu_running").toBool())
         return;
 
@@ -236,6 +247,8 @@ void installNavHover(QPushButton *button)
 
 void shake(QWidget *w)
 {
+    if (!ThemeManager::instance().animationsEnabled())
+        return;
     if (!w)
         return;
     const QPoint p = w->pos();

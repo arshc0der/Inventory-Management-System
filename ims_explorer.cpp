@@ -179,7 +179,7 @@ InventoryExplorer::InventoryExplorer(QWidget *parent)
     m_table->setShowGrid(false);
     m_table->setFrameShape(QFrame::NoFrame);
     m_table->verticalHeader()->setVisible(false);
-    m_table->verticalHeader()->setDefaultSectionSize(40);
+    m_table->verticalHeader()->setDefaultSectionSize(ThemeManager::instance().rowHeight());
     m_table->horizontalHeader()->setHighlightSections(false);
     m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     m_table->horizontalHeader()->setSectionResizeMode(ColName, QHeaderView::Stretch);
@@ -203,7 +203,10 @@ InventoryExplorer::InventoryExplorer(QWidget *parent)
     find->setContext(Qt::WidgetWithChildrenShortcut);
     connect(find, &QShortcut::activated, this, [this]() { focusSearch(); });
 
-    connect(&ThemeManager::instance(), &ThemeManager::themeChanged, this, [this]() { refresh(); });
+    connect(&ThemeManager::instance(), &ThemeManager::appearanceChanged, this, [this]() {
+        m_table->verticalHeader()->setDefaultSectionSize(ThemeManager::instance().rowHeight());
+        refresh();
+    });
 
     refresh();
 }

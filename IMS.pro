@@ -10,6 +10,10 @@ CONFIG += c++17
 
 SOURCES += \
     ims_explorer.cpp \
+    ims_datagrid.cpp \
+    ims_datacenter.cpp \
+    ims_overview.cpp \
+    ims_appearance.cpp \
     ims_fx.cpp \
     ims_palette.cpp \
     ims_theme.cpp \
@@ -51,6 +55,10 @@ SOURCES += \
 
 HEADERS += \
     ims_explorer.h \
+    ims_datagrid.h \
+    ims_datacenter.h \
+    ims_overview.h \
+    ims_appearance.h \
     ims_fx.h \
     ims_palette.h \
     ims_theme.h \
